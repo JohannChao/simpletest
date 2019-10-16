@@ -3,7 +3,8 @@
  集合类存放于java.util包下，主要有三种：Set（集），List（列表包含Queue），Map（映射）。
  ```text
 差异点：
-Collections类：这个类是集合的一个工具类（Arrays也是集合下的工具类），用于存放多个静态方法，供我们使用集合的时候直接调用。
+
+Collections 这个类是集合的一个工具类（Arrays也是集合下的工具类），用于存放多个静态方法，供我们使用集合的时候直接调用。
 ```
  
  ### collection接口：
@@ -121,3 +122,61 @@ Collections类：这个类是集合的一个工具类（Arrays也是集合下的
 
 通过分析源码，我们看到Vector在add新元素的时候，也是分两步 1，判断是否需要扩容；2，新增元素。只不过，它所有add元素,remove元素的的方法上都有 synchronized 关键字
 ```
+
+##### 1.3 LinkedList
+```java
+    public boolean add(E e) {
+        linkLast(e);
+        return true;
+    }
+    /**
+     * Links e as last element.
+     */
+    void linkLast(E e) {
+        final Node<E> l = last;
+        final Node<E> newNode = new Node<>(l, e, null);
+        last = newNode;
+        if (l == null)
+            first = newNode;
+        else
+            l.next = newNode;
+        size++;
+        modCount++;
+    }
+    
+    public E get(int index) {
+        checkElementIndex(index);
+        return node(index).item;
+    }
+    /**
+     * Returns the (non-null) Node at the specified element index.
+     */
+    Node<E> node(int index) {
+        // assert isElementIndex(index);
+
+        if (index < (size >> 1)) {
+            Node<E> x = first;
+            for (int i = 0; i < index; i++)
+                x = x.next;
+            return x;
+        } else {
+            Node<E> x = last;
+            for (int i = size - 1; i > index; i--)
+                x = x.prev;
+            return x;
+        }
+    }
+```    
+继承关系：
+
+继承自AbstractSequentialList抽象类；实现List，Deque（提供了操作队列的方法），Cloneable，Serializable接口。
+
+特征：
+
+1，排列有序，可重复；
+
+2，基于双向链表实现（JDK1.7/8 之后取消了循环，修改为双向链表）；
+
+3，查询速度慢，增删快；
+
+4，线程不安全。
