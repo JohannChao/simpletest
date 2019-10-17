@@ -180,3 +180,9 @@ Collections 这个类是集合的一个工具类（Arrays也是集合下的工�
 3，查询速度慢，增删快；
 
 4，线程不安全。
+
+
+#### 2,SET
+
+Set继承Collection接口
+
