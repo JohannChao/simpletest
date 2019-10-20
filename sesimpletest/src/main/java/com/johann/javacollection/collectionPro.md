@@ -11,8 +11,8 @@ Collections 这个类是集合的一个工具类（Arrays也是集合下的工�
  
  colletion是集合List，Set，Queqe的最基本的接口。
  collection接口依赖Iterator接口
- 
- #### 1,List
+ ---
+ #### 1 List
  
  List接口继承Collection接口
  
@@ -181,8 +181,157 @@ Collections 这个类是集合的一个工具类（Arrays也是集合下的工�
 
 4，线程不安全。
 
-
-#### 2,SET
+---
+#### 2 SET
 
 Set继承Collection接口
 
+##### 2.1 HashSet
+
+```java
+    public HashSet() {
+        map = new HashMap<>();
+    }
+    
+    public boolean add(E e) {
+        return map.put(e, PRESENT)==null;
+    }
+    
+    public boolean remove(Object o) {
+        return map.remove(o)==PRESENT;
+    }
+    
+    /**
+     * Constructs a new, empty linked hash set 构造新的空链接哈希集
+     * This package private constructor is only used by LinkedHashSet. 此包私有构造函数仅由LinkedHashSet使用
+     **/
+    HashSet(int initialCapacity, float loadFactor, boolean dummy) {
+        map = new LinkedHashMap<>(initialCapacity, loadFactor);
+    }
+```
+
+继承关系：
+
+继承自AbstractSet抽象类；实现Set，Cloneable，Serializable接口
+
+特征：
+
+1，排列无序，不可重复（对象是否重复，是自己定义的，重写equals和hashCode方法）；
+
+2，底层使用的是Hash表实现，内部是HashMap；
+
+3，存储速度快
+
+##### 2.2 TreeSet
+```java
+    interface NavigableMap<K,V> extends SortedMap<K,V>
+
+    private transient NavigableMap<E,Object> m;
+
+    public TreeSet() {
+        this(new TreeMap<E,Object>());
+    }
+    
+    public boolean add(E e) {
+        return m.put(e, PRESENT)==null;
+    }
+```
+
+继承关系：
+
+继承AbstractSet抽象类；实现NavigableSet，Cloneable，Serializable接口
+
+特征：
+
+1，底层使用二叉树实现，内部是TreeMap；
+
+2，不可重复（对象是否重复，是自己定义的，重写equals和hashCode方法），排序存储；
+
+3，要实现排序存储，需要保存的对象实现Comparable接口，重写compareTo方法；或者在对TreeSet进行实例化的时候，在构造函数中 通过匿名内部类 重写其中的compare方法。
+```java
+//TODO
+
+```
+
+##### 2.3 LinkedHashSet
+```java
+    public LinkedHashSet() {
+        super(16, .75f, true);
+    }
+    
+    /**
+     * LinkedHashSet继承自HashSet，该方法即使HashSet中，LinkedHashSet的专用构造函数。
+     * Constructs a new, empty linked hash set 构造新的空链接哈希集
+     * This package private constructor is only used by LinkedHashSet. 此包私有构造函数仅由LinkedHashSet使用
+     **/
+    HashSet(int initialCapacity, float loadFactor, boolean dummy) {
+        map = new LinkedHashMap<>(initialCapacity, loadFactor);
+    }
+```
+
+继承关系：
+
+继承自HashSet类；实现Set，Cloneable，Serializable接口
+
+特征：
+
+1，采用Hash表存储，不可重复。保证元素的唯一（哈希表），哈希表是真正存储数据的地方；
+
+2，存储有序（底层有一个链接表），链表记录着存储数据的顺序；
+
+3，线程不安全，效率高；
+
+---
+```text
+理解区分TreeSet和LinkedHashSet的“有序”
+//TODO
+
+```
+
+```java
+for循环，for each，iterator循环合理使用
+//TODO
+
+```
+---
+
+#### 3 Queue
+
+队列，与List和Set同级别，都继承自Collection接口。
+```java
+//TODO
+
+```
+
+
+### Map
+
+映射表的基础接口；依赖Collection接口
+
+#### 1 HashMap
+
+继承关系：
+
+继承AbstractMap类；实现Map，Cloneable，Serializable接口
+
+```text
+内部实现：
+1，在JDK1.7中，HashMap的数据结构是，外层是一个数组，数组中每个元素是一个单项链表（Map.Entry）。
+    capacity：当前数组的容量，始终保持2^n，可以扩容，扩容后数组大小为当前的2倍。初始默认是 16 (1>>4)
+    loadFactor:负载因子，默认是 0.75f
+    threshold:扩容的阈值，等于capacity*loadFactor（即扩容后是原来的1.5倍）
+2，在JDK1.8中，Hash的内部结构是由 数组+链表+红黑树 组成。在JDK7中，查找的时候，根据hash值我们可以快速定位到数组的具体下标，但是之后，需要顺着链表一个个比较下去才能找到我们需要的，
+时间复杂度取决于链表的长度为O(n)。为了降低这部分的开销，在java1.8中，当链表中的元素超过8个以后，会将链表转换为红黑树，在这些位置进行查找的时候，可以降低时间复杂度为O(logN)。
+```
+特征：
+
+1，Key不可重复（只允许存在一个null）。Value允许重复；
+
+2，底层为数组+链表+红黑树（红黑树1.8新增）；
+
+3，线程不安全，具有很快的访问速度。
+
+#### 2 HashTable
+
+
+#### 3 TreeMap
