@@ -220,7 +220,9 @@ Set继承Collection接口
 
 2，底层使用的是Hash表实现，内部是HashMap；
 
-3，存储速度快
+3，存储速度快；
+
+4，一个 hashCode 位置上可以存放多个元素。
 
 ##### 2.2 TreeSet
 ```java
@@ -245,11 +247,16 @@ Set继承Collection接口
 
 1，底层使用二叉树实现，内部是TreeMap；
 
-2，不可重复（对象是否重复，是自己定义的，重写equals和hashCode方法），排序存储；
+2，不可重复（对象是否重复，是自己定义的，重写equals和hashCode方法）；
 
-3，要实现排序存储，需要保存的对象实现Comparable接口，重写compareTo方法；或者在对TreeSet进行实例化的时候，在构造函数中 通过匿名内部类 重写其中的compare方法。
+3，排序存储；
+
+4，需要保存的对象实现Comparable接口，重写compareTo方法；或者在对TreeSet进行实例化的时候，在构造函数中 通过匿名内部类 重写其中的compare方法。
+
+TreeSet示例
 ```java
 //TODO
+//TreeSet示例
 
 ```
 
@@ -261,7 +268,7 @@ Set继承Collection接口
     
     /**
      * LinkedHashSet继承自HashSet，该方法即使HashSet中，LinkedHashSet的专用构造函数。
-     * Constructs a new, empty linked hash set 构造新的空链接哈希集
+     * Constructs a new, empty linked hash set 构造新的空链哈希Set
      * This package private constructor is only used by LinkedHashSet. 此包私有构造函数仅由LinkedHashSet使用
      **/
     HashSet(int initialCapacity, float loadFactor, boolean dummy) {
@@ -277,15 +284,15 @@ Set继承Collection接口
 
 1，采用Hash表存储，不可重复。保证元素的唯一（哈希表），哈希表是真正存储数据的地方；
 
-2，存储有序（底层有一个链接表），链表记录着存储数据的顺序；
+2，存储有序（底层有一个链接表），链表记录着存储数据的顺序（插入顺序）；
 
 3，线程不安全，效率高；
 
 ---
 ```text
 理解区分TreeSet和LinkedHashSet的“有序”
-//TODO
-
+1，TreeSet是根据重写的compareTo方法，对Set内部的集合进行排序，来实现Set“有序”。
+2，LinkedHashSet是根据内部链表记录插入顺序，来实现Set“有序”
 ```
 
 ```java
@@ -298,9 +305,125 @@ for循环，for each，iterator循环合理使用
 #### 3 Queue
 
 队列，与List和Set同级别，都继承自Collection接口。
-```java
-//TODO
+```text
+1，什么是队列？
+队列与栈是相对的一种数据结构。只允许在一端进行插入操作，而在另一端进行删除操作的线性表。栈的特点是后进先出，而队列的特点是先进先出。
 
+2，Queue的实现
+2.1，没有实现的阻塞接口的：
+    实现了java.util.Queue接口和java.util.AbstractQueue接口
+    内置的不阻塞队列： PriorityQueue 和 ConcurrentLinkedQueue
+    PriorityQueue 和 ConcurrentLinkedQueue 类在 Collection Framework 中加入两个具体集合实现。 
+2.1.1，PriorityQueue又叫做优先级队列，保存队列元素的顺序不是按照及加入队列的顺序，而是按照队列元素的大小进行重新排序。
+    加入到 Queue 中的元素根据它们的天然排序（通过其 java.util.Comparable实现）或者根据传递给构造函数的 java.util.Comparator 实现来定位。
+2.1.2，ConcurrentLinkedQueue 是基于链接节点的、线程安全的队列。并发访问不需要同步。因为它在队列的尾部添加元素并从头部删除它们，所以只要不需要知道队列的大小，
+    ConcurrentLinkedQueue 对公共集合的共享访问就可以工作得很好。收集关于队列大小的信息会很慢，需要遍历队列。
+
+2.2，实现阻塞接口的：
+    java.util.concurrent 中加入了 BlockingQueue 接口和五个阻塞队列类。它实质上就是一种带有一点扭曲的 FIFO 数据结构。不是立即从队列中添加或者删除元素，
+    线程执行操作阻塞，直到有空间或者元素可用。
+2.2.1，ArrayBlockingQueue ：一个由数组支持的有界队列。
+2.2.2，LinkedBlockingQueue ：一个由链接节点支持的可选有界队列。
+2.2.3，PriorityBlockingQueue ：一个由优先级堆支持的无界优先级队列。
+2.2.4，DelayQueue ：一个由优先级堆支持的、基于时间的调度队列。
+2.2.5，SynchronousQueue ：一个利用 BlockingQueue 接口的简单聚集（rendezvous）机制。
+
+3，总结：
+    当 Deque 当做 Queue队列使用时（FIFO），添加元素是添加到队尾，删除时删除的是头部元素
+    Deque 也能当Stack栈用（LIFO）。这时入栈、出栈元素都是在双端队列的头部进行。
+插一嘴：Stack过于古老，并且实现地非常不好，因此现在基本已经不用了，可以直接用Deque来代替Stack进行栈操作。
+    ArrayDeque不是线程安全的。 当作为栈使用时，性能比Stack好；当作为队列使用时，性能比LinkedList好。
+```
+
+使用阻塞队列实现一个生产者消费者模式
+```java
+/**
+ * 使用阻塞队列实现一个生产者消费者模式
+ */
+public class BlockingQueueTest {
+ /**
+ 定义装苹果的篮子
+  */
+ public static class Basket{
+  // 篮子，能够容纳3个苹果
+  BlockingQueue<String> basket = new ArrayBlockingQueue<String>(3);
+
+  // 生产苹果，放入篮子
+  public void produce() throws InterruptedException{
+   // put方法放入一个苹果，若basket满了，等到basket有位置
+   basket.put("An apple");
+  }
+  // 消费苹果，从篮子中取走
+  public String consume() throws InterruptedException{
+   // get方法取出一个苹果，若basket为空，等到basket有苹果为止
+   String apple = basket.take();
+   return apple;
+  }
+
+  public int getAppleNumber(){
+   return basket.size();
+  }
+
+ }
+ //　测试方法
+ public static void testBasket() {
+  // 建立一个装苹果的篮子
+  final Basket basket = new Basket();
+  // 定义苹果生产者
+  class Producer implements Runnable {
+   public void run() {
+    try {
+     while (true) {
+      // 生产苹果
+      System.out.println("生产者准备生产苹果：" 
+        + System.currentTimeMillis());
+      basket.produce();
+      System.out.println("生产者生产苹果完毕：" 
+        + System.currentTimeMillis());
+      System.out.println("生产完后有苹果："+basket.getAppleNumber()+"个");
+      // 休眠300ms
+      Thread.sleep(300);
+     }
+    } catch (InterruptedException ex) {
+    }
+   }
+  }
+  // 定义苹果消费者
+  class Consumer implements Runnable {
+   public void run() {
+    try {
+     while (true) {
+      // 消费苹果
+      System.out.println("消费者准备消费苹果：" 
+        + System.currentTimeMillis());
+      basket.consume();
+      System.out.println("消费者消费苹果完毕：" 
+        + System.currentTimeMillis());
+      System.out.println("消费完后有苹果："+basket.getAppleNumber()+"个");
+      // 休眠1000ms
+      Thread.sleep(1000);
+     }
+    } catch (InterruptedException ex) {
+    }
+   }
+  }
+
+  ExecutorService service = Executors.newCachedThreadPool();
+  Producer producer = new Producer();
+  Consumer consumer = new Consumer();
+  service.submit(producer);
+  service.submit(consumer);
+  // 程序运行10s后，所有任务停止
+  try {
+   Thread.sleep(10000);
+  } catch (InterruptedException e) {
+  }
+  service.shutdownNow();
+ }
+ public static void main(String[] args) {
+  BlockingQueueTest.testBasket();
+ }
+}
 ```
 
 
@@ -314,6 +437,29 @@ for循环，for each，iterator循环合理使用
 
 继承AbstractMap类；实现Map，Cloneable，Serializable接口
 
+
+为什么HashMap的key允许为null ？？？？？
+
+```java
+    //为什么HashMap的key允许为null
+    public V put(K key, V value) {
+        return putVal(hash(key), key, value, false, true);
+    }
+    
+    //计算key的hashcode值
+    static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+
+    /**
+     * 我们可以看到，HashMap在计算hashcode值的时候，会判断Key是否为空，如果为空则将hashcode值置为 0
+     * 所以HashMap的Key允许为空。
+    **/
+```
+
+HashMap内部实现
+
 ```text
 内部实现：
 1，在JDK1.7中，HashMap的数据结构是，外层是一个数组，数组中每个元素是一个单项链表（Map.Entry）。
@@ -323,15 +469,261 @@ for循环，for each，iterator循环合理使用
 2，在JDK1.8中，Hash的内部结构是由 数组+链表+红黑树 组成。在JDK7中，查找的时候，根据hash值我们可以快速定位到数组的具体下标，但是之后，需要顺着链表一个个比较下去才能找到我们需要的，
 时间复杂度取决于链表的长度为O(n)。为了降低这部分的开销，在java1.8中，当链表中的元素超过8个以后，会将链表转换为红黑树，在这些位置进行查找的时候，可以降低时间复杂度为O(logN)。
 ```
+
 特征：
 
-1，Key不可重复（只允许存在一个null）。Value允许重复；
+1，Key不可重复（只允许存在一个null）,Value允许为null；
 
 2，底层为数组+链表+红黑树（红黑树1.8新增）；
 
 3，线程不安全，具有很快的访问速度。
 
-#### 2 HashTable
+#### 2 Hashtable
+继承关系：
 
+继承Dictionary类；实现Map，Cloneable，Serializable接口
+
+为什么Hashtable的Key和Value都不允许为null ？？？？？
+
+```java
+    public synchronized V put(K key, V value) {
+        // Make sure the value is not null
+        if (value == null) {
+            throw new NullPointerException();
+        }
+
+        // Makes sure the key is not already in the hashtable.
+        Entry<?,?> tab[] = table;
+        int hash = key.hashCode();
+        int index = (hash & 0x7FFFFFFF) % tab.length;
+        @SuppressWarnings("unchecked")
+        Entry<K,V> entry = (Entry<K,V>)tab[index];
+        for(; entry != null ; entry = entry.next) {
+            if ((entry.hash == hash) && entry.key.equals(key)) {
+                V old = entry.value;
+                entry.value = value;
+                return old;
+            }
+        }
+
+        addEntry(hash, key, value, index);
+        return null;
+    }
+
+    /**
+     * 通过以上源码我们可以看到，如果value为null，则抛出异常。计算key的hashcode值的时候，没有包装方法，
+     * 而是直接使用的key.hashcode()方法，如果key为null，也会报空指针异常。
+    **/
+```
+
+特征：
+
+1，hashtable是一个过时的类，不再推荐使用；
+
+2，Key不允许为null，Value不允许为null；
+
+3，继承自Dictionary类；
+
+4，线程安全
 
 #### 3 TreeMap
+
+继承关系：
+
+继承AbstractMap类；实现NavigableMap，Cloneable，Serializable接口
+
+```java
+    public V put(K key, V value) {
+        Entry<K,V> t = root;
+        if (t == null) {
+            compare(key, key); // type (and possibly null) check
+
+            root = new Entry<>(key, value, null);
+            size = 1;
+            modCount++;
+            return null;
+        }
+        int cmp;
+        Entry<K,V> parent;
+        // split comparator and comparable paths
+        Comparator<? super K> cpr = comparator;
+        if (cpr != null) {
+            do {
+                parent = t;
+                cmp = cpr.compare(key, t.key);
+                if (cmp < 0)
+                    t = t.left;
+                else if (cmp > 0)
+                    t = t.right;
+                else
+                    return t.setValue(value);
+            } while (t != null);
+        }
+        else {
+            /**
+             * 如果key为空，则直接抛出异常
+            **/
+            if (key == null)
+                throw new NullPointerException();
+            @SuppressWarnings("unchecked")
+                Comparable<? super K> k = (Comparable<? super K>) key;
+            do {
+                parent = t;
+                cmp = k.compareTo(t.key);
+                if (cmp < 0)
+                    t = t.left;
+                else if (cmp > 0)
+                    t = t.right;
+                else
+                    return t.setValue(value);
+            } while (t != null);
+        }
+        Entry<K,V> e = new Entry<>(key, value, parent);
+        if (cmp < 0)
+            parent.left = e;
+        else
+            parent.right = e;
+        fixAfterInsertion(e);
+        size++;
+        modCount++;
+        return null;
+    }
+```
+
+特征：
+
+1，Key不允许为null，Value允许为null；
+
+2，TreeMap 实现 SortedMap 接口，能够把它保存的记录根据键排序，默认是按键值的升序排序；
+
+3，在使用 TreeMap 时，key 必须实现 Comparable 接口或者在构造 TreeMap 传入自定义的Comparator，否则会在运行时抛出 java.lang.ClassCastException 类型的异常
+
+
+#### 4 LinkedHashMap
+
+继承关系：
+
+继承HashMap类；实现Map接口
+
+特征：
+
+LinkedHashMap 是 HashMap 的一个子类，保存了记录的插入顺序，在用 Iterator 遍历
+LinkedHashMap 时，先得到的记录肯定是先插入的，也可以在构造时带参数，按照访问次序排序。
+
+#### 5 ConcurrentHashMap
+
+继承关系：
+
+继承AbstractMap类；实现ConcurrentMap，Serializable接口
+
+ConcurrentHashMap内部实现
+
+```text
+1，JDK1.5中的实现
+    ConcurrentHashMap使用的是分段锁技术,将ConcurrentHashMap将锁一段一段的存储，然后给每一段数据配一把锁（segment），
+    当一个线程占用一把锁（segment）访问其中一段数据的时候，其他段的数据也能被其它的线程访问，默认分配16个segment。默认比Hashtable效率提高16倍。
+
+2，JDK1.8中的实现
+    ConcurrentHashMap取消了segment分段锁，而采用CAS和synchronized来保证并发安全。数据结构跟HashMap1.8的结构一样，数组+链表/红黑二叉树。
+    synchronized只锁定当前链表或红黑二叉树的首节点，这样只要hash不冲突，就不会产生并发，效率又提升N倍。
+```
+
+源码分析
+
+```java
+public V put(K key, V value) {
+    return putVal(key, value, false);
+}
+
+    /** Implementation for put and putIfAbsent */
+final V putVal(K key, V value, boolean onlyIfAbsent) {
+    //ConcurrentHashMap 不允许插入null键，HashMap允许插入一个null键
+    if (key == null || value == null) throw new NullPointerException();
+    //计算key的hash值
+    int hash = spread(key.hashCode());
+    int binCount = 0;
+    //for循环的作用：因为更新元素是使用CAS机制更新，需要不断的失败重试，直到成功为止。
+    for (Node<K,V>[] tab = table;;) {
+        // f：链表或红黑二叉树头结点，向链表中添加元素时，需要synchronized获取f的锁。
+        Node<K,V> f; int n, i, fh;
+        //判断Node[]数组是否初始化，没有则进行初始化操作
+        if (tab == null || (n = tab.length) == 0)
+            tab = initTable();
+        //通过hash定位Node[]数组的索引坐标，是否有Node节点，如果没有则使用CAS进行添加（链表的头结点），添加失败则进入下次循环。
+        else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
+            if (casTabAt(tab, i, null,
+                         new Node<K,V>(hash, key, value, null)))
+                break;                   // no lock when adding to empty bin
+        }
+        //检查到内部正在移动元素（Node[] 数组扩容）
+        else if ((fh = f.hash) == MOVED)
+            //帮助它扩容
+            tab = helpTransfer(tab, f);
+        else {
+            V oldVal = null;
+            //锁住链表或红黑二叉树的头结点
+            synchronized (f) {
+                //判断f是否是链表的头结点
+                if (tabAt(tab, i) == f) {
+                    //如果fh>=0 是链表节点
+                    if (fh >= 0) {
+                        binCount = 1;
+                        //遍历链表所有节点
+                        for (Node<K,V> e = f;; ++binCount) {
+                            K ek;
+                            //如果节点存在，则更新value
+                            if (e.hash == hash &&
+                                ((ek = e.key) == key ||
+                                 (ek != null && key.equals(ek)))) {
+                                oldVal = e.val;
+                                if (!onlyIfAbsent)
+                                    e.val = value;
+                                break;
+                            }
+                            //不存在则在链表尾部添加新节点。
+                            Node<K,V> pred = e;
+                            if ((e = e.next) == null) {
+                                pred.next = new Node<K,V>(hash, key,
+                                                          value, null);
+                                break;
+                            }
+                        }
+                    }
+                    //TreeBin是红黑二叉树节点
+                    else if (f instanceof TreeBin) {
+                        Node<K,V> p;
+                        binCount = 2;
+                        //添加树节点
+                        if ((p = ((TreeBin<K,V>)f).putTreeVal(hash, key,
+                                                      value)) != null) {
+                            oldVal = p.val;
+                            if (!onlyIfAbsent)
+                                p.val = value;
+                        }
+                    }
+                }
+            }
+            
+            if (binCount != 0) {
+                //如果链表长度已经达到临界值8 就需要把链表转换为树结构
+                if (binCount >= TREEIFY_THRESHOLD)
+                    treeifyBin(tab, i);
+                if (oldVal != null)
+                    return oldVal;
+                break;
+            }
+        }
+    }
+    //将当前ConcurrentHashMap的size数量+1
+    addCount(1L, binCount);
+    return null;
+}
+```
+
+特征：
+
+1，Key不允许为null，Value不允许为null；
+
+2，线程安全，且效率比较高（锁分段技术）
+
+### 线程安全的集合
