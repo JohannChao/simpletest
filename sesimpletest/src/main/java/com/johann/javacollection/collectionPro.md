@@ -224,6 +224,80 @@ Set继承Collection接口
 
 4，一个 hashCode 位置上可以存放多个元素。
 
+
+HashSet重写equals和hashcode方法
+
+```java
+/**
+ * @Author Johann
+ * @Description HashSet重写equals和hashcode方法
+ **/
+class Student {
+    private Integer code;
+    private String name;
+
+    public Student(){}
+
+    public Student(Integer code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "code=" + code +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    /**
+     * @Author Johann
+     * @Description 重写equals方法
+     **/
+    @Override
+    public boolean equals(Object o) {
+        if(o==null){
+            return false;
+        }else if (this == o){//是否与当前对象相同
+            return true;
+        } else if(o instanceof Student){//是否与当前对象类相同
+            Student student = (Student) o;
+            if((student.getCode()).equals(code)){//code相同，认定为是同一对象
+                return true;
+            }else{
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+    /**
+     * @Author Johann
+     * @Description 重写hashcode方法
+     **/
+    @Override
+    public int hashCode() {
+            return (code==null) ? 0 :code.hashCode();
+    }
+}
+```
 ##### 2.2 TreeSet
 ```java
     interface NavigableMap<K,V> extends SortedMap<K,V>
@@ -465,9 +539,12 @@ HashMap内部实现
 1，在JDK1.7中，HashMap的数据结构是，外层是一个数组，数组中每个元素是一个单项链表（Map.Entry）。
     capacity：当前数组的容量，始终保持2^n，可以扩容，扩容后数组大小为当前的2倍。初始默认是 16 (1>>4)
     loadFactor:负载因子，默认是 0.75f
-    threshold:扩容的阈值，等于capacity*loadFactor（即扩容后是原来的1.5倍）
-2，在JDK1.8中，Hash的内部结构是由 数组+链表+红黑树 组成。在JDK7中，查找的时候，根据hash值我们可以快速定位到数组的具体下标，但是之后，需要顺着链表一个个比较下去才能找到我们需要的，
-时间复杂度取决于链表的长度为O(n)。为了降低这部分的开销，在java1.8中，当链表中的元素超过8个以后，会将链表转换为红黑树，在这些位置进行查找的时候，可以降低时间复杂度为O(logN)。
+    threshold:扩容的阈值，等于capacity*loadFactor。即超过这个值，就会对数组进行扩容。
+    resize()方法，是一个十分消耗性能的方法，因为要重构hash表。
+2，在JDK1.8中，Hash的内部结构是由 数组+链表+红黑树 组成。在JDK7中，查找的时候，根据hash值我们可以快速定位到数组的具体下标，但是之后，
+需要顺着链表一个个比较下去才能找到我们需要的，时间复杂度取决于链表的长度为O(n)。
+为了降低这部分的开销，在java1.8中，当链表中的元素达到 8 个时，会将链表转换为红黑树，在这些位置进行查找的时候，可以降低时间复杂度为O(logN)。
+当外层数组index节点的元素个数减少 6 时，会把红黑数再转换为链表。
 ```
 
 特征：

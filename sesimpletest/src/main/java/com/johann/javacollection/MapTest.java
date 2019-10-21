@@ -16,10 +16,8 @@ public class MapTest {
         int b = 20;
         int c = a & b;
         System.out.println(c);
-        String
         Map hashmap = new HashMap();
         hashmap.put("ZYH","CN");
         hashmap.put("LLQ", "JP");
-        Queue
     }
 }
