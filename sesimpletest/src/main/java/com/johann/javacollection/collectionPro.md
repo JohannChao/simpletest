@@ -329,10 +329,306 @@ class Student {
 
 TreeSet示例
 ```java
-//TODO
-//TreeSet示例
+/**
+ * @ClassName TreeSetTest
+ * @Description TreeSet排序测试
+ * @Author Johann
+ **/
+public class TreeSetTest {
 
+    public static void main(String[] args) {
+
+        // 1，TreeSet使用1 对象没有实现Comparable接口，需要在TreeSet的构造函数中新增匿名内部类Comparator，重新compare方法
+        Set<Student> studentSet = new TreeSet<Student>(new Comparator<Student>() {
+            @Override
+            public int compare(Student o1, Student o2) {
+                if(o1.getCode() > o2.getCode()){
+                    return 1;
+                }else if (o1.getCode() < o2.getCode()){
+                    return -1;
+                }else {
+                    return 0;
+                }
+            }
+        });
+        studentSet.add(new Student(112,"zyh112"));
+        studentSet.add(new Student(112,"zyhcopy112"));
+        studentSet.add(new Student(111,"zyh111"));
+        studentSet.add(new Student(113,"zyh113"));
+        System.out.println(studentSet);
+
+        // 2，TreeSet使用2 对象实现了Comparable接口，重写compareTo方法。无需在TreeSet的构造函数中新增匿名内部类
+        Set<student2> student2Set = new TreeSet<student2>();
+        student2Set.add(new student2(312,"zyh312"));
+        student2Set.add(new student2(312,"zyhcopy312"));
+        student2Set.add(new student2(311,"zyh311"));
+        student2Set.add(new student2(313,"zyh313"));
+        System.out.println(student2Set);
+
+        //3， TreeSet不能使用实现Comparator接口的对象。报异常:student1 cannot be cast to java.lang.Comparable
+        Set<student1> student1Set = new TreeSet<student1>();
+        student1Set.add(new student1(212,"zyh212"));
+        student1Set.add(new student1(212,"zyhcpoy212"));
+        student1Set.add(new student1(211,"zyh211"));
+        student1Set.add(new student1(213,"zyh213"));
+        System.out.println(student1Set);
+    }
+}
+
+
+/**
+ * 待使用的普通对象
+ */
+class Student {
+    private Integer code;
+    private String name;
+
+    public Student(){}
+
+    public Student(Integer code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "code=" + code +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    /**
+     * @Author Johann
+     * @Description 重写equals方法
+     **/
+    @Override
+    public boolean equals(Object o) {
+        if(o==null){
+            return false;
+        }else if (this == o){//是否与当前对象相同
+            return true;
+        } else if(o instanceof Student){//是否与当前对象类相同
+            Student student = (Student) o;
+            if((student.getCode()).equals(code)){//code相同，认定为是同一对象
+                return true;
+            }else{
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+    /**
+     * @Author Johann
+     * @Description 重写hashcode方法
+     **/
+    @Override
+    public int hashCode() {
+        return (code==null) ? 0 :code.hashCode();
+    }
+}
+
+/**
+ * 实现Comparator接口的对象
+ */
+class student1 implements Comparator<student1> {
+    private Integer code;
+    private String name;
+
+    public student1(){}
+
+    public student1(Integer code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "code=" + code +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    /**
+     * @Author Johann
+     * @Description 重写equals方法
+     **/
+    @Override
+    public boolean equals(Object o) {
+        if(o==null){
+            return false;
+        }else if (this == o){//是否与当前对象相同
+            return true;
+        } else if(o instanceof Student){//是否与当前对象类相同
+            Student student = (Student) o;
+            if((student.getCode()).equals(code)){//code相同，认定为是同一对象
+                return true;
+            }else{
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+    /**
+     * @Author Johann
+     * @Description 重写hashcode方法
+     **/
+    @Override
+    public int hashCode() {
+        return (code==null) ? 0 :code.hashCode();
+    }
+
+    /**
+     * @Author Johann
+     * @Description 重写compare方法
+     **/
+    @Override
+    public int compare(student1 o1, student1 o2) {
+        if(o1.getCode() > o2.getCode()){
+            return 1;
+        }else if (o1.getCode() < o2.getCode()){
+            return -1;
+        }else {
+            return 0;
+        }
+    }
+}
+
+/**
+ * 实现Comparable接口的对象
+ */
+class student2 implements Comparable<student2>{
+    private Integer code;
+    private String name;
+
+    public student2(){}
+
+    public student2(Integer code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "code=" + code +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    /**
+     * @Author Johann
+     * @Description 重写equals方法
+     **/
+    @Override
+    public boolean equals(Object o) {
+        if(o==null){
+            return false;
+        }else if (this == o){//是否与当前对象相同
+            return true;
+        } else if(o instanceof Student){//是否与当前对象类相同
+            Student student = (Student) o;
+            if((student.getCode()).equals(code)){//code相同，认定为是同一对象
+                return true;
+            }else{
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+    /**
+     * @Author Johann
+     * @Description 重写hashcode方法
+     **/
+    @Override
+    public int hashCode() {
+        return (code==null) ? 0 :code.hashCode();
+    }
+
+    /**
+     * @Author Johann
+     * @Description 重写compareTo方法
+     **/
+    @Override
+    public int compareTo(student2 o) {
+        if(code > o.getCode()){
+            return 1;
+        }else if (code < o.getCode()){
+            return -1;
+        }else {
+            //return 0;
+            return name.compareTo(o.name);
+        }
+    }
+}
 ```
+上面示例运行结果：
+
+
+通过上述TreeSet示例，我们可以发现以下几点：
+
+1，TreeSet需要保存的对象实现Comparable接口，重写compareTo方法，而不能保存实现Comparator接口的对象。
+
+2，我们发现，即使student2重写了hashcode和equals方法，但是在TreeSet中，依然加入了重复元素。
+
+为什么呢？
+  
+请注意student2类重写的compareTo方法：如果code相同，则继续比较name。在使用TreeSet的时候，要注意重写的compareTo方法是否与重写的hashcode，equals方法不一致。
+
+//TODO
+Comparator接口和Comparable接口对比差异？
 
 ##### 2.3 LinkedHashSet
 ```java
@@ -546,6 +842,8 @@ HashMap内部实现
 为了降低这部分的开销，在java1.8中，当链表中的元素达到 8 个时，会将链表转换为红黑树，在这些位置进行查找的时候，可以降低时间复杂度为O(logN)。
 当外层数组index节点的元素个数减少 6 时，会把红黑数再转换为链表。
 ```
+//TODO
+HashMap底层数据结构
 
 特征：
 
@@ -804,3 +1102,4 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 2，线程安全，且效率比较高（锁分段技术）
 
 ### 线程安全的集合
+//TODO
