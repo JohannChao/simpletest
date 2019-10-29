@@ -590,11 +590,14 @@ class student2 implements Comparable<student2>{
     }
     /**
      * @Author Johann
-     * @Description 重写hashcode方法
+     * @Description 重写hashcode方法.计算出每个重要字段的hash值相加
      **/
     @Override
     public int hashCode() {
-        return (code==null) ? 0 :code.hashCode();
+        int hash = 0;
+        hash = 31*hash + (code==null) ? 0 :code.hashCode();
+        hash = 31*hash + (name==null) ? 0 :name.hashCode();
+        return hash;
     }
 
     /**
