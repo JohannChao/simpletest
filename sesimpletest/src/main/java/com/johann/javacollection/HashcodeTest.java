@@ -16,7 +16,7 @@ public class HashcodeTest {
         int b = a+a;
         System.out.println(b);
 
-        String str1 = new String("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        String str1 = new String("11");
 
         char[] str1char = str1.toCharArray();
 
@@ -30,6 +30,11 @@ public class HashcodeTest {
         System.out.println(str1.hashCode()& Integer.MAX_VALUE);
 //        System.out.println(simulationHashcode(31,str1char));
         whyIs31(31);
+
+        int hhh = (11>>>16)^11;
+        int index = hhh&15;
+        System.out.println("hhh : "+hhh);
+        System.out.println("index ： "+index);
     }
 
     /**
