@@ -1,0 +1,3 @@
+javac StringTest.java
+
+javap -v StringTest.class
