@@ -1,4 +1,4 @@
-### java字符串概述;
+### 字符串概述;
 
 - 字符串（String类）是java常用类之一，位于java.util包下。
 - 字符串是字符序列，它不是基本数据类型，而是对象。
@@ -15,15 +15,49 @@ String对象两种不同的创建方式
 2，使用new关键字创建。使用new创建的字符串对象，存储在堆内存中，对象指向的也是堆内存中的对象，而不是字符串池中的同值对象。
 
 ```java
-1, String s1 = "hello java"; 
-2, String s2 = new String("hello java");
+1, String s1 = "hello，java"; 
+2, String s2 = new String("hello，java");
 ```
+### 字符串字面量
+
+一个字符串字面量是由双引号（“”）括起来的零个或多个字符。
+
+
+**字符串字面量示例**
+（JDK1.8的环境下）
+```java
+package testPackage;
+class Test {
+    public static void main(String[] args) {
+        String hello = "Hello", lo = "lo";
+        System.out.print((hello == "Hello") + " ");             //true
+        System.out.print((Other.hello == hello) + " ");         //true
+        System.out.print((other.Other.hello == hello) + " ");   //true
+        System.out.print((hello == ("Hel"+"lo")) + " ");        //true
+        System.out.print((hello == ("Hel"+lo)) + " ");          //false
+        System.out.println(hello == ("Hel"+lo).intern());       //true
+    }
+}
+class Other { static String hello = "Hello"; }
+```
+```java
+package other;
+public class Other { public static String hello = "Hello"; }
+```
+以上程序运行结果为：
+```text
+true true true true false true
+```
+
 
 ### 字符串常量池
 
-又叫全局字符串常量池，存在于Java Heap中
+又叫全局字符串常量池，存在于Java Heap中（jdk1.6以及之前的版本，String Pool存在于PermGen中）。
 
-#### 字符串池工作方式
+String的String Pool的底层实现是一个Hashtable，默认值大小长度是1009，如果放进String Pool的String非常多，就会造成Hash冲突严重，从而导致链表会很长，
+而链表长了后直接会造成的影响就是当调用String.intern时性能会大幅下降（因为要一个一个找）。
+
+### 字符串池工作方式
 
 1，当我们创建一个字符串时，它存储在字符串池中。
 
@@ -35,40 +69,90 @@ String对象两种不同的创建方式
 
 5，字符串池是Flyweight设计模式的一个实现例子。
 
-#### 字符串池例子
 
+### 探讨String#intern
+
+它的大体实现结构就是: JAVA 使用 jni 调用c++实现的StringTable的intern方法, StringTable的intern方法跟Java中的HashMap的实现是差不多的, 只是不能自动扩容。默认大小是1009。
+
+在 jdk6中StringTable是固定的，就是1009的长度，所以如果常量池中的字符串过多就会导致效率下降很快。在jdk7中，StringTable的长度可以通过一个参数指定：
+```text
+-XX:StringTableSize=99991
+```
+
+源码中对intern方法的解释（JDK1.8）
+```text
+    /**
+     * When the intern method is invoked, if the pool already contains a
+     * string equal to this {@code String} object as determined by
+     * the {@link #equals(Object)} method, then the string from the pool is
+     * returned. Otherwise, this {@code String} object is added to the
+     * pool and a reference to this {@code String} object is returned.
+     *
+     * 当intern方法被调用时候，如果字符串池中已经包含了一个与当前 string(A) 值相等的 string(B)，
+     * 那么，会返回这个池中的 string(B)。若不包含，则当前的这个 string(A)  会被添加到字符串池中，
+     * 并且返回这个 string(A) 的引用。
+     */
+    public native String intern();
+```
+以下我们会通过几组不同的示例（JDK1.8下），来探讨String#intern方法以及String Pool。
+
+#### 示例一 new String("hello")
 ```java
-public class JavaStringPool {
- 
+public class StringInternTest {
+
     public static void main(String[] args) {
-        String s1 = "Hello";
-        String s2 = "Hello";
-        String s3 = new String("Hi");
-        String s4 = "Hi";
- 
-        System.out.println("s1 == s2? " + (s1 == s2));
-        System.out.println("s3 == s4? " + (s3 == s4));
- 
-        s3 = s3.intern();
-        System.out.println("s3 == s4? " + (s3 == s4));
+        // 1，创建了两个对象，一个是存储在常量池中的“hello”字符串，另一个是存储在Heap中的String对象。s1指向Heap中的对象
+        String s1 = new String("hello");
+        // 2，s2指向字符串池中“hello”字符串
+        String s2 = "hello";
+        // 3，字符串池中已有“hello”字符串，所以这一句没有产生任何影响。
+        s1.intern();
+        System.out.println("s1==s2 : "+(s1==s2)); //false
+
     }
 }
 ```
-```text
-1,当我们创建第一个字符串s1时，字符串池中没有字面量为“Hello”的字符串。因此，将在池中创建一个字符串“Hello”，并将其引用分配给s1。
-2,当我们创建第二个字符串s2时，字符串池中已经有一个字面量为“Hello”的字符串。现有的字符串引用被分配给s2。
-3,当我们创建第三个字符串s3时，它是在堆区域中创建的，因为我们使用了new关键字。
-4,当我们创建第四个字符串s4时，将在池中创建一个字面量为“Hi”的字符串，并将其引用分配给s4。
-5,当我们比较s1 == s2时，它返回true，因为两个变量都引用同一个字符串对象。
-6,当我们比较s3 == s4时，它返回false，因为它们指向不同的字符串对象。
-7.当我们在s3上调用intern()方法时，它检查池中是否有字面量为“Hi”的字符串?因为在字符串池中已经有了这个字面量的字符串，所以它的引用被返回并分配给s3。
-8.现在比较s3 == s4返回true，因为两个变量都引用了相同的字符串对象。
+
+#### 示例二 
+```java
+public class StringInternTest {
+
+    public static void main(String[] args) {
+        // 1，在堆中创建了“hel”和“lo”对象，并将“hel”，“lo”字符串加入到了字符串常量池中。
+        //    在堆中创建一个“hello”对象,字面量为“hello”的字符串没有加入到全局字符串常量池中。s1指向的是堆中的“hello”对象
+        String s1 = new String("hel") + new String("lo");
+        // 2，字符串常量池中没有“hello”，在字符串常量池中生成一个“hello”字符串，s2指向字符串常量池中的“hello”
+        String s2 = "hello";
+        // 3，字符串常量池中已经有一个“hello”字符串。返回字符串常量池中的“hello”字符串，无影响。
+        s1.intern();
+        System.out.println("s1 == s2 : "+(s1 == s2)); //false
+
+        System.out.println("======================");
+
+        // 1，在堆中创建了“go”和“od”对象，并将“go”，“od”字符串加入到了字符串常量池中。
+        //    在堆中创建一个“good”对象,字面量为“good”的字符串没有加入到全局字符串常量池中。s1指向的是堆中的“good”对象
+        String s3 = new String("go") +new String("od");
+
+        // 2，字符串常量池中不存在“good”字符串，字符串常量池中直接保存字面量为“good”的堆中对象的引用，即此时常量池中的引用指向s1引用的对象。
+        // ### 如果此时为JDK1.6，JDK1.6中，字符串常量池保存在PermGen中，此时会在字符串常量池中生成一个字面量为“good”的字符串。###
+        s3.intern();
+
+        // 3，s4的引用指向字符串常量池中的s1引用对象的引用
+        // ### JDK1.6及以前，s4指向PermGen中字符串常量池里的“good”字符串。###
+        String s4 = "good";
+        System.out.println("s3 == s4 : "+(s3 == s4)); //JDK1.7、JDK1.8结果为 true；JDK1.6及以前，结果为 false
+    }
+}
 ```
 
-#### 一共创建了几个字符串？
 
-当我们使用 String s = new String("hello")创建字符串对象时，一共创建了几个字符串呢？答案是一个或两个。
 
-如果在字符串池中已存在“hello”，那么就只在堆内存中创建一个值为“hello”的字符串；
-如果在字符串池中不存在“hello”，那么会先在字符串池中创建一个值为“hello”的字符串，然后在堆内存中再创建一个值为“hello”的字符串对象。
+
+
+参考：
+
+https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-CharacterLiteral
+
+https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html
+
 
