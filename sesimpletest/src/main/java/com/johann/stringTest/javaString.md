@@ -113,7 +113,7 @@ public class StringInternTest {
 }
 ```
 
-#### 示例二 
+#### 示例二 new String("hel") + new String("lo")
 ```java
 public class StringInternTest {
 
@@ -145,7 +145,50 @@ public class StringInternTest {
 }
 ```
 
+#### 示例三 new String("lo"+"ve")
+```java
+public class StringInternTest {
 
+    public static void main(String[] args) {
+        // 1，这一句我们只知道在堆中创建了“love”对象，并不知道在常量池中是否加入了“love”字符串
+        String s15 = new String("lo"+"ve");
+
+        //如果上一句执行完，如果在StringTable中放入了"love"，那么下面的执行结果就是false；如果在StringTable中没有放入了"love"，执行该句，会把堆中“love”对象的引用放入到StringTable中，即下面的结果是 true
+        // 2，上一句执行完，如果在字符串常量池中没有加入“love”字符串，那么执行完 s15.intern(); 会在字符串常量池中加入字面量为“love”的堆中对象的引用。
+        //    如果字符串中已经加入了“love”字符串，此时无影响。
+        s15.intern();
+        // 3, s16为字符串常量池中的对象引用
+        String s16 = "love";
+
+        System.out.println("s15 == s16 : "+(s15==s16));// fasle 说明执行 new String("lo"+"ve"); 时，在字符串常量池中已经加入了“love”，即在StringTable中已经放入了“love”
+
+        System.out.println("=================================");
+
+        // 1，通过javap分析，我们可以知道这一句代码在编译的时候，会把“mi”，“ne”合并为一个对象“mine”保存在常量池中。
+        //   即这一句，只在堆中创建了“mine”对象，在字符串常量池中创建了“mine”字符串。没有“mi”，“ne”对象
+        String s17 = new String("mi"+"ne");
+
+        // 2，只会在堆中创建"mi",在StringTable不放入“mi”
+        String s18 = new String("m")+new String("i");
+        // 2，只会在堆中创建"mi",在StringTable不放入“mi”
+        //String s18 = new StringBuilder().append("m").append("i").toString();
+
+        System.out.println(s18.intern()==s18); // true
+
+        System.out.println("=================================");
+
+        // 1，在堆中创建了“yo”对象，在字符串常量池中创建了字面量为“yo”的字符串
+        String s19 = new String("yo");
+
+        // 2，只会在堆中创建"yo",在StringTable不放入“yo”
+        String s20 = new String("y")+new String("o");
+        // 2，只会在堆中创建"yo",在StringTable不放入“yo”
+        //String s20 = new StringBuilder().append("y").append("o").toString();
+
+        System.out.println(s20.intern()==s20); //false
+    }
+}
+```
 
 
 
@@ -155,4 +198,4 @@ https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-CharacterLitera
 
 https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html
 
-
+https://www.zhihu.com/question/55994121/answer/147296098
