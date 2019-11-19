@@ -94,7 +94,10 @@ String的String Pool的底层实现是一个Hashtable，默认值大小长度是
      */
     public native String intern();
 ```
+
+
 以下我们会通过几组不同的示例（JDK1.8下），来探讨String#intern方法以及String Pool。
+
 
 #### 示例一 new String("hello")
 ```java
@@ -113,7 +116,21 @@ public class StringInternTest {
 }
 ```
 
-#### 示例二 new String("hel") + new String("lo")
+#### 示例二 String s1 = "hello"+"world";
+```java
+public class StringInternTest {
+
+    public static void main(String[] args) {
+         // 编译阶段优化为 "helloworld",在字符串常量池中创建一个字面量为 "helloworld"的字符串
+         String s1 = "hello"+"world";
+         String s0 = "helloworld";
+         System.out.println(s1==s0);// true
+    }
+}
+```
+
+
+#### 示例三 new String("hel") + new String("lo")
 ```java
 public class StringInternTest {
 
@@ -145,7 +162,7 @@ public class StringInternTest {
 }
 ```
 
-#### 示例三 new String("lo"+"ve")
+#### 示例四 new String("lo"+"ve")
 ```java
 public class StringInternTest {
 
@@ -155,7 +172,8 @@ public class StringInternTest {
 
         //如果上一句执行完，如果在StringTable中放入了"love"，那么下面的执行结果就是false；如果在StringTable中没有放入了"love"，执行该句，会把堆中“love”对象的引用放入到StringTable中，即下面的结果是 true
         // 2，上一句执行完，如果在字符串常量池中没有加入“love”字符串，那么执行完 s15.intern(); 会在字符串常量池中加入字面量为“love”的堆中对象的引用。
-        //    如果字符串中已经加入了“love”字符串，此时无影响。
+        
+        //   如果字符串中已经加入了“love”字符串，此时无影响。
         s15.intern();
         // 3, s16为字符串常量池中的对象引用
         String s16 = "love";
@@ -173,7 +191,7 @@ public class StringInternTest {
         // 2，只会在堆中创建"mi",在StringTable不放入“mi”
         //String s18 = new StringBuilder().append("m").append("i").toString();
 
-        System.out.println(s18.intern()==s18); // true
+        System.out.println(s18.intern()==s18); // true    new String("mi"+"ne");时，不会在堆中创建 "mi"和"ne"对象，也不会在字符串常量池中创建相同字面量的字符串
 
         System.out.println("=================================");
 
@@ -185,17 +203,146 @@ public class StringInternTest {
         // 2，只会在堆中创建"yo",在StringTable不放入“yo”
         //String s20 = new StringBuilder().append("y").append("o").toString();
 
-        System.out.println(s20.intern()==s20); //false
+        System.out.println(s20.intern()==s20); // false   new String("yo"); 时，已经在字符串常量池中加入了 "yo",所以s20.intern()指向的字符串常量池中的 "yo"，s20指向堆中的一个"yo"对象
     }
 }
 ```
 
+#### 示例五 String s2 = "nihao"; String s3 = "java";  String s4 = s2+s3;
+```java
+public class StringInternTest {
 
+    public static void main(String[] args) {
+        String s2 = "nihao";
+        String s3 = "java";
+        // 下面这一句，实际执行步骤是：创建一个StringBuilder对象，将所相加的字符串append起来，最后调用StringBuilder的toString方法，在堆中创建一个"nihaojava"对象
+        // 但是，在字符串常量池中没有加入 "nihaojava"字符串。s4引用指向堆中对象
+        String s4 = s2+s3;
+        // 在字符串常量池中加入 字面量为“nihaojava”的堆中对象的引用
+        s4.intern();
+        // s5指向字符串常量池中字面量为 "nihaojava"的字符串，实际上这个字符串是堆中字面量为 "nihaojava"对象的引用
+        String s5 = "nihaojava";
+        System.out.println(s4==s5); // true
+    }
+}
+```
 
-参考：
+#### 示例六 String a = "some"; String param = new String("param" + a);
+```java
+public class StringInternTest {
 
-https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-CharacterLiteral
+    public static void main(String[] args) {
+        // 字符串常量池中加入 "some"字符串
+        String a = "some";
+        // 在堆中创建 "some"对象，在字符串常量池中加入字面量为"some"的字符串
+        //String a = new String("some");
+        // 下面这一句，实际执行步骤是：创建一个StringBuilder对象，将所相加的字符串append起来，最后调用StringBuilder的toString方法，在堆中创建一个"paramsome"对象,没有加入字符串常量池
+        String param = "param" + a;
+        // 下面这一句，实际执行步骤是：创建一个StringBuilder对象，将所相加的字符串append起来，最后调用StringBuilder的toString方法，在堆中创建一个"paramsome"对象,没有加入字符串常量池
+        //String param = new String("param" + a);
+        param.intern();
+        String paramSome = "paramsome";
+        System.out.println(param == paramSome);// true
+    }
+}
+```
 
-https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html
+### 全局字符串常量池中存储的到底是对象还是引用？
 
-https://www.zhihu.com/question/55994121/answer/147296098
+根据[@R大](https://www.zhihu.com/people/rednaxelafx/activities)在[参考4](https://www.zhihu.com/question/36908414/answer/69724311)与[参考5](https://www.zhihu.com/question/36908414/answer/69724311)中的答案，知晓了在Java中，字符串常量池中存放的是引用，而不是把这些对象直接存储在全局常量池中。
+
+但是，这一说法与[参考2](https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html)中,关于字符串常量池存储类型的解释有出入，这篇文章中写明的是字符串常量池既可以存储对象字符串，又可以存储引用。
+
+在参考中，可以了解到以下几点：
+
+1，String a = "123"; 对象存储在堆中，引用存储在全局字符串常量池中【string pool / StringTable】。
+可以认为在堆中存在一个字面量为"123"的字符串对象，但在字符串常量池中存在其引用。
+
+String b = new String("456"); 按照上述的说法，那么使用new关键字会创建两个字面量为"456"的字符串对象，这两个对象的都存储在堆中，只不过其中一个的引用被 b 持有，另外一个的引用存储在字符串常量池【StringTable】中。
+
+2，HotSpot VM的StringTable的本体在native memory里。它持有String对象的引用而不是String对象的本体。
+被引用的String还是在Java heap里。一直到JDK6，这些被intern的String在permgen里，JDK7开始改为放在普通Java heap里。
+
+关于字符串常量池，看的有点头大，今天暂时探讨到这里，以后再做进一步的思考。
+
+### 有意思的几个问题
+
+#### System.out.print(null);
+
+```text
+打印结果是 ： null
+``` 
+为什么呢？
+```java
+    // print方法源码
+    public void print(String s) {
+        if (s == null) {
+            s = "null";
+        }
+        write(s);
+    }
+```
+#### String a = null+""; System.out.print(a);
+```text
+打印结果是 ： null
+```
+为什么呢？
+
+null+""的实际执行步骤是：创建一个StringBuilder对象，将所相加的字符串append起来，最后调用StringBuilder的toString方法。
+即 new StringBuilder().append(null).append("");
+```java
+    // StringBuilder类中源码
+    public StringBuilder append(Object obj) {
+        return append(String.valueOf(obj));
+    }
+    
+    public StringBuilder append(String str) {
+        super.append(str);
+        return this;
+    }
+    
+    // String类中的源码
+    public static String valueOf(Object obj) {
+        return (obj == null) ? "null" : obj.toString();
+    }
+    
+    // StringBuilder父类 AbstractStringBuilder 类中源码
+    public AbstractStringBuilder append(String str) {
+        if (str == null)
+            return appendNull();
+        int len = str.length();
+        ensureCapacityInternal(count + len);
+        str.getChars(0, len, value, count);
+        count += len;
+        return this;
+    }
+    
+    private AbstractStringBuilder appendNull() {
+        int c = count;
+        ensureCapacityInternal(c + 4);
+        final char[] value = this.value;
+        value[c++] = 'n';
+        value[c++] = 'u';
+        value[c++] = 'l';
+        value[c++] = 'l';
+        count = c;
+        return this;
+    }
+```
+由源码可知
+
+String.valueOf(null) 结果是 "null";
+
+使用StringBuilder和StringBuffer的 append 方法时，要注意如果传入的是null，是会直接在字符串上拼接一个"null".
+
+### 参考：
+
+[1，Java语言规范 3.10.5. String Literals](https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-CharacterLiteral)
+
+[2，深度解析String＃intern](https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html)
+
+[3，Java 中new String("字面量") 中 "字面量" 是何时进入字符串常量池的? -知乎](https://www.zhihu.com/question/55994121/answer/147296098)
+
+[4，new一个String对象的时候，如果常量池没有相应的字面量真的会去它那里创建一个吗？ -知乎](https://www.zhihu.com/question/36908414/answer/69724311)
+
+[5，JVM 常量池中存储的是对象还是引用呢？ -知乎](https://www.zhihu.com/question/57109429/answer/151717241)

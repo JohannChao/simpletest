@@ -3,12 +3,13 @@ package main.java.com.johann.constantinfo;
 public class StringTest{
 	
 	public static void main(String[] args) {
-//		String s3 = new String("hel") + new String("lo");
-		String s15 = new String("mi"+"ne");
-		String s1 = "hello"+"world";
-		String s2 = "nihao";
-		String s3 = "java";
-		String s4 = s2+s3;
-		String s5 = "nihaojava";
+
+		String a = null+"";
+		//String c = a.intern();
+		//String b = "null";
+		//System.out.println(a==b);
+		System.out.println(a);
+		//System.out.println(c);
+		//System.out.println(c==b);
 	}
 }
