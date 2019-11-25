@@ -1,5 +1,6 @@
 ### 字符串概述;
 
+#### 介绍
 - 字符串（String类）是java常用类之一，位于java.util包下。
 - 字符串是字符序列，它不是基本数据类型，而是对象。
 - String字符串是不可变的，一旦创建变无法更改。
@@ -18,10 +19,51 @@ String对象两种不同的创建方式
 1, String s1 = "hello，java"; 
 2, String s2 = new String("hello，java");
 ```
+
+#### 字符串常见的方法
+```text
+1, length()：返回字符串对象的长度。
+2, charAt(int index)：返回给定索引处的字符值。
+3, toCharArray()：此方法从该字符串创建一个字符数组。
+4, getBytes(String charsetName)：用于从此字符串创建字节数组。
+5, equals(Object anObject)：用于将该字符串与另一个对象进行比较。
+6, equalsIgnoreCase(String anotherString)：用于将此字符串与不区分大小写的另一个字符串进行比较。
+7, compareTo(String anotherString), compareToIgnoreCase(String str)：按字典顺序将此字符串与另一个字符串进行比较。第一个区分大小写，第二个进行不区分大小写的比较。
+8, startsWith(String prefix)：如果此字符串以给定的字符串开头，则返回true。
+9, endsWith(String suffix)：如果此字符串以给定的字符串结尾，则返回true。
+10, substring(int beginIndex, int endIndex)：返回此字符串的子字符串。
+11, concat(String str)：将给定的字符串连接到该字符串的末尾并返回它。
+12, replace(char oldChar, char newChar)：用newChar替换oldChar之后，返回一个新字符串。
+13, matches(String regex)：检查此字符串是否与给定的正则表达式匹配。
+14, split(String regex)：使用正则表达式参数将此字符串拆分为字符串数组。
+15, join(CharSequence delimiter, CharSequence... elements)：一种实用程序方法，用于使用指定的分隔符将许多字符串连接到新字符串中。我们可以使用此方法从字符串数组创建CSV记录。
+16, toLowerCase(), toUpperCase()：用于获取此字符串的小写和大写版本。
+17, trim()：用于从此字符串中删除前导和尾随空格。
+18, strip(), stripLeading(), stripTrailing()：从该字符串中删除空格后，返回新字符串。如果您感到困惑strip()，则trim()– 和- 之间没有什么区别。他们两个都执行相同的任务，但是strip()方法更具可读性。它与其他编程语言中的类似方法保持一致。
+19, isBlank()：如果字符串为空或仅包含空格，则返回true。
+20, lines()：Java 11中引入的：从该字符串返回一行流。
+21, indent(int n)：Java 12中引入的：根据参数值返回缩进字符串。
+22, transform(Function<? super String, ? extends R> f)：在Java 12中引入，将功能应用于此字符串。该函数应接受单个字符串参数并返回R。
+23, format(String format, Object... args)：使用指定的格式和参数返回格式化的字符串。
+24, valueOf(Object obj)：返回给定对象的字符串表示形式。有重载版本可以使用原始数据类型，数组和对象。
+25, intern()：从字符串常量池池返回字符串。
+26, repeat(int count)：将此字符串连接指定的次数后，返回一个新的字符串。
+27, describeConstable(), resolveConstantDesc(MethodHandles.Lookup lookup)：为Java 12 Constants API实现。
+```
+
+#### 字符串的不可变性带来的好处
+
+1，由于字符串是不可变的，这为字符串池的实现提供了可能，字符串池可以节省了内存并提高性能。
+
+2，由于我们无法更改字符串对象的值，因此更加安全。
+
+3，在多线程环境中使用字符串时的线程安全性。
+
+4，作为加载类的参数进行传递的字符串值是不可改变的，因此类加载更加安全。
+
 ### 字符串字面量
 
 一个字符串字面量是由双引号（“”）括起来的零个或多个字符。
-
 
 **字符串字面量示例**
 （JDK1.8的环境下）
@@ -49,7 +91,6 @@ public class Other { public static String hello = "Hello"; }
 true true true true false true
 ```
 
-
 ### 字符串常量池
 
 又叫全局字符串常量池，存在于Java Heap中（jdk1.6以及之前的版本，String Pool存在于PermGen中）。
@@ -57,7 +98,7 @@ true true true true false true
 String的String Pool的底层实现是一个Hashtable，默认值大小长度是1009，如果放进String Pool的String非常多，就会造成Hash冲突严重，从而导致链表会很长，
 而链表长了后直接会造成的影响就是当调用String.intern时性能会大幅下降（因为要一个一个找）。
 
-### 字符串池工作方式
+#### 字符串池工作方式
 
 1，当我们创建一个字符串时，它存储在字符串池中。
 
@@ -346,3 +387,5 @@ String.valueOf(null) 结果是 "null";
 [4，new一个String对象的时候，如果常量池没有相应的字面量真的会去它那里创建一个吗？ -知乎](https://www.zhihu.com/question/36908414/answer/69724311)
 
 [5，JVM 常量池中存储的是对象还是引用呢？ -知乎](https://www.zhihu.com/question/57109429/answer/151717241)
+
+[6，Java String](https://www.javastring.net/)
