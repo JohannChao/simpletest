@@ -39,7 +39,7 @@ String对象两种不同的创建方式
 15, join(CharSequence delimiter, CharSequence... elements)：一种实用程序方法，用于使用指定的分隔符将许多字符串连接到新字符串中。我们可以使用此方法从字符串数组创建CSV记录。
 16, toLowerCase(), toUpperCase()：用于获取此字符串的小写和大写版本。
 17, trim()：用于从此字符串中删除前导和尾随空格。
-18, strip(), stripLeading(), stripTrailing()：从该字符串中删除空格后，返回新字符串。如果您感到困惑strip()，则trim()– 和- 之间没有什么区别。他们两个都执行相同的任务，但是strip()方法更具可读性。它与其他编程语言中的类似方法保持一致。
+18, strip(), stripLeading(), stripTrailing()：从该字符串中删除空格后，返回新字符串。
 19, isBlank()：如果字符串为空或仅包含空格，则返回true。
 20, lines()：Java 11中引入的：从该字符串返回一行流。
 21, indent(int n)：Java 12中引入的：根据参数值返回缩进字符串。
