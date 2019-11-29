@@ -11,7 +11,7 @@ import java.util.Calendar;
  **/
 public class StringBuilderTest {
     public static void main(String[] args) {
-        StringBuilder sb = new StringBuilder();
+//        StringBuilder sb = new StringBuilder();
 //        System.out.println("capacity : "+sb.capacity());
 //        System.out.println("length : "+sb.length());
 //        System.out.println("toString : "+sb.toString());
@@ -43,21 +43,21 @@ public class StringBuilderTest {
 //
 //        StringBuilder sb = new StringBuilder();
 
-        sb.append("123456789012345");
-        sb.append(" ");
-        System.out.println("capacity : "+sb.capacity());
-        System.out.println("length : "+sb.length());
-        sb.append("7");
-        System.out.println("capacity : "+sb.capacity());
-        System.out.println("length : "+sb.length());
-        System.out.println("toString : "+sb.toString());
+//        sb.append("123456789012345");
+//        sb.append(" ");
+//        System.out.println("capacity : "+sb.capacity());
+//        System.out.println("length : "+sb.length());
+//        sb.append("7");
+//        System.out.println("capacity : "+sb.capacity());
+//        System.out.println("length : "+sb.length());
+//        System.out.println("toString : "+sb.toString());
 
         /**
          * 如果当前底层char数组的长度大于当前字符串的长度，调整char数组的长度为当前字符串长度
          **/
-        sb.trimToSize();
-        System.out.println("capacity : "+sb.capacity());
-        System.out.println("length : "+sb.length());
+//        sb.trimToSize();
+//        System.out.println("capacity : "+sb.capacity());
+//        System.out.println("length : "+sb.length());
 //        StringBuilder sbb2 = new StringBuilder("jav");
 //        sbb2.append("1234567890123456");
 //        System.out.println(sbb2.capacity());

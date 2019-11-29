@@ -309,9 +309,9 @@ String b = new String("456"); 按照上述的说法，那么使用new关键字�
 ### 有意思的几个问题
 
 #### System.out.print(null);
-
+打印结果是 ：
 ```text
-打印结果是 ： null
+null
 ``` 
 为什么呢？
 ```java
@@ -324,8 +324,9 @@ String b = new String("456"); 按照上述的说法，那么使用new关键字�
     }
 ```
 #### String a = null+""; System.out.print(a);
+打印结果是 ： 
 ```text
-打印结果是 ： null
+null
 ```
 为什么呢？
 
@@ -375,6 +376,46 @@ null+""的实际执行步骤是：创建一个StringBuilder对象，将所相加
 String.valueOf(null) 结果是 "null";
 
 使用StringBuilder和StringBuffer的 append 方法时，要注意如果传入的是null，是会直接在字符串上拼接一个"null".
+
+#### String.concat()方法
+```java
+    String s001 = "zhong";
+    String s002 = s001.concat("guo");
+    //s002.intern();
+    System.out.println(s001);
+    System.out.println(s002);
+    String s003 = "zhongguo";
+    System.out.println(s002==s003);
+```
+打印结果是：
+```text
+zhong
+zhongguo
+false
+```
+
+```java
+    String s001 = "zhong";
+    String s002 = s001.concat("guo");
+    s002.intern();
+    System.out.println(s001);
+    System.out.println(s002);
+    String s003 = "zhongguo";
+    System.out.println(s002==s003);
+```
+打印结果是：
+```text
+zhong
+zhongguo
+true
+```
+通过以上结果对比，我们可知：
+
+1，String.concat()方法执行完后，会生成一个新的字符串，我们需要一个新的变量名来接收结果。原字符串没有改变，这符合String字符串不可变的特性。
+
+2，String.concat()方法执行完后，在堆中创建了一个新的字符串，但是在字符串变量池中不存在同值的字符串。
+
+
 
 ### 参考：
 

@@ -257,3 +257,102 @@ indexOf(String str, int fromIndex)
 int lastIndexOf(String str)
 
 int lastIndexOf(String str, int fromIndex)
+
+
+
+### StringBuffer
+
+StringBuffer 继承自 AbstractStringBuilder抽象类，实现Serializable, CharSequence接口。不可以被继承
+
+#### StringBuffer构造函数和常用方法
+
+StringBuffer有四个构造函数，同StringBuilder。
+
+StringBuffer的常用方法，和StringBuilder一样
+
+
+#### StringBuffer和StringBuilder的 toString方法区别
+
+在StringBuffer中，存在一个StringBuilder中所没有的数组：toStringCache。这个数组用于缓存最后一次调用toString方法时返回的值。
+
+StringBuffer类的toString方法
+```java
+public final class StringBuffer
+    extends AbstractStringBuilder
+    implements java.io.Serializable, CharSequence
+{
+    /**
+     * A cache of the last value returned by toString. Cleared
+     * whenever the StringBuffer is modified.
+     *  
+     *  最后一次调用toString方法的返回值缓存，当 StringBuffer 改变时，清除这个缓存
+     */
+    private transient char[] toStringCache;
+
+    @Override
+    public synchronized String toString() {
+        if (toStringCache == null) {
+            toStringCache = Arrays.copyOfRange(value, 0, count);
+        }
+        return new String(toStringCache, true);
+    }
+}
+```
+
+StringBuilder类的toString方法
+```java
+public final class StringBuilder
+    extends AbstractStringBuilder
+    implements java.io.Serializable, CharSequence
+{
+    @Override
+    public String toString() {
+        // Create a copy, don't share the array
+        return new String(value, 0, count);
+    }
+}
+```
+
+String类源码
+```java
+public final class String
+    implements java.io.Serializable, Comparable<String>, CharSequence {
+    
+    private final char value[];  
+    
+    /**
+     *  StringBuilder类 toString的调用方法
+     **/
+    public String(char value[], int offset, int count) {
+        if (offset < 0) {
+            throw new StringIndexOutOfBoundsException(offset);
+        }
+        if (count <= 0) {
+            if (count < 0) {
+                throw new StringIndexOutOfBoundsException(count);
+            }
+            if (offset <= value.length) {
+                this.value = "".value;
+                return;
+            }
+        }
+        // Note: offset or count might be near -1>>>1.
+        if (offset > value.length - count) {
+            throw new StringIndexOutOfBoundsException(offset + count);
+        }
+        this.value = Arrays.copyOfRange(value, offset, offset+count);
+    }
+    
+    /**
+     *  StringBuffer类 toString的调用方法
+     **/
+    String(char[] value, boolean share) {
+        // assert share : "unshared not supported";
+        this.value = value;
+    }
+}
+```
+
+如果字符串没有变化，在对StringBuffer重复调用toString方法时，减少了 Arrays.copyOfRange 复制操作。
+
+这个缓存数组在字符串变化时，会把这个缓存数组置为null，重新调用toString方法时，会再次对缓存数组赋值。StringBuilder是线程不安全的，没有这个缓存数组。
