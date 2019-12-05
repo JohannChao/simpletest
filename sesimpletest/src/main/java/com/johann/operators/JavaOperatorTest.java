@@ -75,7 +75,7 @@ public class JavaOperatorTest {
 //        //按位左移
 //        int mleft = m<<2;
 //        int nleft = n<<3;
-//        System.out.println(m+"<<2"+" 按位左移："+mleft);// 200
+//        System.out.println(m+"<<2"+" 按位左移："+mleft);// 20  0
 //        System.out.println(m+"<<2"+" 按位左移二进制："+Integer.toBinaryString(mleft));// 11001000
 //        System.out.println(n+"<<3"+" 按位左移："+nleft);// 120
 //        System.out.println(n+"<<3"+" 按位左移二进制："+Integer.toBinaryString(nleft));// 1111000
