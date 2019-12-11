@@ -1,5 +1,6 @@
 package main.java.com.johann.javaRegex;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -117,5 +118,12 @@ public class RegexTest {
         for(String s : strArray){
             System.out.println(s);
         }
+
+        /**********************************************************************************/
+
+        Pattern pattern = Pattern.compile("a\\b");
+        Matcher matcher = pattern.matcher("sa,");
+        boolean matcherFlag = matcher.find();
+        System.out.println("matcherFlag : "+matcherFlag);
     }
 }
