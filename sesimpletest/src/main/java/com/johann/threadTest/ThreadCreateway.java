@@ -1,5 +1,6 @@
 package main.java.com.johann.threadTest;
 
+import java.util.Calendar;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -52,7 +53,7 @@ class ExtendsThread extends Thread{
     }
     @Override
     public void run() {
-        System.out.println("ExtendsThread 继承了Thread类");
+        System.out.println("ExtendsThread : "+Thread.currentThread().getName()+" ## 继承了Thread类");
     }
 }
 /** 
@@ -63,7 +64,14 @@ class ExtendsThread extends Thread{
 class ImplementsRunnable implements Runnable{
     @Override
     public void run() {
-        System.out.println("ImplementsRunnable 实现了Runnable接口");
+        System.out.println("- - ImplementsRunnable 执行开始时间 ： "+ Calendar.getInstance().get(Calendar.HOUR_OF_DAY)+":"+Calendar.getInstance().get(Calendar.MINUTE)+":"+Calendar.getInstance().get(Calendar.SECOND));
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        System.out.println("ImplementsRunnable : "+Thread.currentThread().getName()+" ## 实现了Runnable接口");
+        System.out.println("- - ImplementsRunnable 执行结束时间 ： "+ Calendar.getInstance().get(Calendar.HOUR_OF_DAY)+":"+Calendar.getInstance().get(Calendar.MINUTE)+":"+Calendar.getInstance().get(Calendar.SECOND));
     }
 }
 /** 
