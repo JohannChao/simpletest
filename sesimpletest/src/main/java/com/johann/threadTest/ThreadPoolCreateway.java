@@ -377,7 +377,71 @@ public class ThreadPoolCreateway {
             System.out.println("### 任务被终止。。。。。。 ");
         }
 
-        //关闭线程池
-        scheduledThreadPool.shutdown();
+        try{
+            //关闭线程池
+            /**
+            *   Initiates an orderly shutdown in which previously submitted
+             *      * tasks are executed, but no new tasks will be accepted.
+             *      * Invocation has no additional effect if already shut down.
+             *  启动有序关闭，在此过程中执行以前提交的任务，但不接受任何新任务。如果已经关闭，调用将没有其他效果。
+             *
+             *  This method does not wait for previously submitted tasks to
+             *      * complete execution.  Use {@link #awaitTermination awaitTermination}
+             *      * to do that.
+             *  此方法不等待先前提交的任务完成执行.使用 {@link #awaitTermination awaitTermination} 方法来实现该效果。
+             *
+             */
+            scheduledThreadPool.shutdown();
+
+            /**
+            *   Attempts to stop all actively executing tasks, halts the
+             *      * processing of waiting tasks, and returns a list of the tasks
+             *      * that were awaiting execution.
+             *  尝试停止所有正在执行的任务，停止等待任务的处理，并返回等待执行的任务列表。
+             *
+             *  This method does not wait for actively executing tasks to
+             *      * terminate.  Use {@link #awaitTermination awaitTermination} to
+             *      * do that.
+             *   此方法不会等待正在积极执行的任务终止。使用{@link #awaitTermination awaitTermination}来完成。
+             *
+             *  There are no guarantees beyond best-effort attempts to stop
+             *      * processing actively executing tasks.  For example, typical
+             *      * implementations will cancel via {@link Thread#interrupt}, so any
+             *      * task that fails to respond to interrupts may never terminate.
+             *  除了尽最大努力停止处理正在执行的任务外，没有任何保证。例如，典型的实现将通过{@link Thread#interrupt}取消，因此任何未能响应中断的任务都可能永远不会终止。
+            */
+            //scheduledThreadPool.shutdownNow();
+
+            /**
+             *   Returns {@code true} if this executor has been shut down.
+             *   如果此执行程序已关闭，则返回{@code true}。
+            */
+            //scheduledThreadPool.isShutdown();
+
+            /**
+            *   Returns {@code true} if all tasks have completed following shut down.
+             *      * Note that {@code isTerminated} is never {@code true} unless
+             *      * either {@code shutdown} or {@code shutdownNow} was called first.
+             *  如果所有任务都在关闭后完成，则返回{@code true}。
+             *  注意，{@code isTerminated}从来不是{@code true}，除非首先调用{@code shutdown}或{@code shutdownNow}。
+            */
+            //scheduledThreadPool.isTerminated();
+
+            /**
+            *  Blocks until all tasks have completed execution after a shutdown
+             *      * request, or the timeout occurs, or the current thread is
+             *      * interrupted, whichever happens first.
+             * 块，直到所有任务在关闭请求后完成执行，或超时发生，或当前线程中断，以先发生的情况为准。
+             *
+             *  @return {@code true} if this executor terminated and
+             *      *   {@code false} if the timeout elapsed before termination
+             *   如果此执行程序终止，则为{@code true}
+             *   如果在终止之前超时，则为{@code false}
+            */
+            //scheduledThreadPool.awaitTermination(1000,TimeUnit.SECONDS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
