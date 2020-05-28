@@ -7,8 +7,10 @@ import java.util.concurrent.TimeUnit;
  *
  * 作者：Alex Wang
  *  链接：https://www.zhihu.com/question/37601861/answer/94679949
+ *
+ *  notify唤醒一个等待的线程；notifyAll唤醒所有等待的线程。
 */
-public class WaitAndNotify {
+public class NotifyAndNotifyAll {
 
     public static void main(String[] args) {
         Object co = new Object();

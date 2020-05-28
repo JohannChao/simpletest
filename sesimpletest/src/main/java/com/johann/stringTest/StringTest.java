@@ -79,12 +79,54 @@ public class StringTest {
 //        String paramSame = param.intern();
 //        System.out.println(param == paramSame);
 
-        String s001 = "zhong";
-        String s002 = s001.concat("guo");
-        //s002.intern();
-        System.out.println(s001);
-        System.out.println(s002);
-        String s003 = "zhongguo";
-        System.out.println(s002==s003);
+//        String s001 = "zhong";
+//        String s002 = s001.concat("guo");
+//        //s002.intern();
+//        System.out.println(s001);
+//        System.out.println(s002);
+//        String s003 = "zhongguo";
+//        System.out.println(s002==s003);
+
+
+        //[深入理解JAVA虚拟机第二版] 57页的坑
+        // 引用： https://www.cnblogs.com/thisiswhy/p/12317742.html
+        String str1 = new StringBuilder("计算机").append("软件").toString();
+        //String str1 = new String("计算机软件");
+        String str1intern = str1.intern();
+        //System.out.println("str1 地址 ："+System.identityHashCode(str1)+" str1intern 地址 ： "+System.identityHashCode(str1intern));
+        //System.out.println("str1 hashcode : "+str1.hashCode()+" str1intern hashcode : "+str1intern.hashCode());
+        //System.out.println(str1intern.equals(str1));
+        System.out.println(str1intern == str1);// 1.8 true  1.7 true  1.6 false
+
+        String str5 = new String("你好") + new String("Johann");
+        //String str5 = "你好" + "Johann";//在运行中常量池中存入字符串“你好Johann”
+        //System.out.println(str5.intern() == str5);//
+
+        String str5copy = new String("你好" + "Johann");
+        System.out.println(str5copy.intern() == str5);//
+
+
+        //String str3 = new StringBuilder("hello").append("word").toString();
+        //String str3 = new String("helloword");
+        char [] chars = {'h','e','l','l','o','w','o','r','d'};
+        String str3 = new String(chars);
+        String str3intern = str3.intern();
+        //System.out.println("str3 地址 ："+System.identityHashCode(str3)+" str3intern 地址 ： "+System.identityHashCode(str1intern));
+        //System.out.println("str3 hashcode : "+str3.hashCode()+" str3intern hashcode : "+str3intern.hashCode());
+        //System.out.println(str3intern.equals(str3));
+        System.out.println(str3intern == str3);// 1.8 true  1.7 true  1.6 false
+
+        String str2 = new StringBuilder("ja").append("va").toString();
+        String str2intern = str2.intern();
+        //System.out.println("str2 hashcode : "+str2.hashCode()+" str2intern hashcode : "+str2intern.hashCode());
+        //System.out.println(str2intern.equals(str2));
+        System.out.println(str2intern == str2);// 1.8 false  1.7 false  1.6 false
+
+//        String str4 = new StringBuilder("vo").append("id").toString();
+//        String str4intern = str4.intern();
+//        System.out.println("str4 hashcode : "+str4.hashCode()+" str4intern hashcode : "+str4intern.hashCode());
+//        System.out.println(str4intern.equals(str4));
+//        System.out.println(str4intern == str4);// 1.8 false  1.7 false  1.6 false
+
     }
 }

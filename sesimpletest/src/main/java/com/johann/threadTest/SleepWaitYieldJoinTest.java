@@ -11,7 +11,7 @@ import java.util.concurrent.RunnableFuture;
  * @Author: Johann
  * @Date: 2019-12-13 10:01
  **/
-public class SleepWaitTest {
+public class SleepWaitYieldJoinTest {
 
     private static final Object lockObj = new Object();
 
@@ -19,7 +19,7 @@ public class SleepWaitTest {
         //SleepWaitTest.testSleep();
         //SleepWaitTest.testWait();
         //SleepWaitTest.testYield();
-        SleepWaitTest.testJoin();
+        SleepWaitYieldJoinTest.testJoin();
 
         /**
         * 验证线程sleep的时候，是否会让出CPU资源
@@ -117,7 +117,7 @@ public class SleepWaitTest {
 
      *  notify()方法和notifyAll()方法都是唤醒线程的方法，所谓的唤醒，意思是将该对象等待池中的线程放入到锁池中，锁池中的线程可以参与该对象的锁竞争。
      *  notify()方法和notifyAll()方法的不同处在于，notify()每次只唤醒一个线程，具体唤醒哪个由JVM决定。而notifyAll()方法会唤醒该对象等待池中的所有线程。
-     *  代码参照：WaitAndNotify.java
+     *  代码参照：NotifyAndNotifyAll.java
      *
      *      * Causes the current thread to wait until another thread invokes the
      *      * {@link java.lang.Object#notify()} method or the

@@ -15,7 +15,7 @@ public class StringInternTest {
         String param = "param" + a;
         // 下面这一句，实际执行步骤是：创建一个StringBuilder对象，将所相加的字符串append起来，最后调用StringBuilder的toString方法，在堆中创建一个"paramsome"对象,没有加入字符串常量池
         //String param = new String("param" + a);
-        param.intern();
+        System.out.println(param.intern()==param);
         String paramSome = "paramsome";
         System.out.println(param == paramSome);// true
 

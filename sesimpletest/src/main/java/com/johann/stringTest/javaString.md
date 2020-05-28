@@ -421,12 +421,12 @@ true
 
 [1，Java语言规范 3.10.5. String Literals](https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-CharacterLiteral)
 
-[2，深度解析String＃intern](https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html)
+[2，深度解析String＃intern ---美团技术团队](https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html)
 
-[3，Java 中new String("字面量") 中 "字面量" 是何时进入字符串常量池的? -知乎](https://www.zhihu.com/question/55994121/answer/147296098)
+[3，Java 中new String("字面量") 中 "字面量" 是何时进入字符串常量池的? ---知乎](https://www.zhihu.com/question/55994121/answer/147296098)
 
-[4，new一个String对象的时候，如果常量池没有相应的字面量真的会去它那里创建一个吗？ -知乎](https://www.zhihu.com/question/36908414/answer/69724311)
+[4，new一个String对象的时候，如果常量池没有相应的字面量真的会去它那里创建一个吗？ ---知乎](https://www.zhihu.com/question/36908414/answer/69724311)
 
-[5，JVM 常量池中存储的是对象还是引用呢？ -知乎](https://www.zhihu.com/question/57109429/answer/151717241)
+[5，JVM 常量池中存储的是对象还是引用呢？ ---知乎](https://www.zhihu.com/question/57109429/answer/151717241)
 
 [6，Java String](https://www.javastring.net/)

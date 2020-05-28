@@ -2,7 +2,8 @@ package main.java.com.johann.paramtrans;
 
 /**
  * @ClassName ObjectParamTransTest
- * @Description TODO
+ *  方法中传入的是引用类型，这个引用类型的数据是存储在堆内的，在栈内只是存储的这个对象的引用。所以在方法内传入的参数，其实只是这个引用的Copy，这两个引用指向同一个对象。
+ *  当我们在方法内改变这个参数的时候，实际上改变的是堆中的对象，所以原来的栈内引用没有改变，但是这个引用指向的对象，却改变了。
  * @Author Johann
  * @Date 2019-10-8 15:01
  **/

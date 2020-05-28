@@ -2,7 +2,8 @@ package main.java.com.johann.paramtrans;
 
 /**
  * @ClassName BasicParamTransTest
- * @Description TODO
+ *  方法中传入的参数是基本类型，经过方法对参数处理后，原来的变量值不变。
+ *  其实，传入方法内的参数，只是原来变量的一份Copy，即在栈内再次开辟一个空间，用于存储这个传入的参数。在方法内改变参数的值，当然不会影响本体的值。
  * @Author Johann
  * @Date 2019-10-8 14:43
  **/
@@ -10,7 +11,7 @@ public class BasicParamTransTest {
 
     /**
      * @Author Johann
-     * @Description //基本类型
+     * @Description //基本类型 Java只有值传递
      * @Date 14:52 2019-10-8
      * @Param [m, n]
      * @return void
