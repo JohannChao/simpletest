@@ -2,7 +2,7 @@ package main.java.com.johann.javaProblem;
 
 /**
  * @ClassName: Java8MultiExtends
- * @Description: TODO
+ * @Description: java8多继承的问题
  * @Author: Johann
  * @Date: 2020-05-25 14:54
  **/

@@ -20,8 +20,9 @@ public class ThreadCreateway {
 
         // 方式二 实现 Runnable 接口
         Runnable runnable = new ImplementsRunnable();//初始化实现Runnable接口的类
-        Thread b = new Thread(runnable,"实现Runnable");//对象作为参数传入
-        b.start();
+        //Thread b = new Thread(runnable,"实现Runnable");//对象作为参数传入
+        //b.start();
+        runnable.run();
 
         // 方式三 实现 Callable 接口
         // 执行Callable任务后，可以获取一个Future的对象，在该对象上调用get就可以获取到Callable任务的返回值。
