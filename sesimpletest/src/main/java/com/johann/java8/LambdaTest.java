@@ -1,11 +1,11 @@
 package main.java.com.johann.java8;
 
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 /**
  * @ClassName: LambdaTest
@@ -118,6 +118,196 @@ public class LambdaTest {
         //输出的结果显示，打印了两遍 "Lymbda表达式中的 this "，而不是两个引用地址【注：调用的是 外部类（姑且这么称之）的 已重写的toString()方法】
         /* </p> */
 
+
+        /* <p> */
+        // Lambda and Collections
+        // 为引入Lambda表达式，Java8新增了java.util.function包，里面包含常用的函数接口，这是Lambda表达式的基础，Java集合框架也新增部分接口，以便与Lambda表达式对接。
+
+        //  ### Collection接口中的新方法
+        // 1，forEach() 这个方法，其实是继承自 Iterable 接口
+        // 方法体
+        /**
+        *  default void forEach(Consumer<? super T> action) {
+         *         Objects.requireNonNull(action);
+         *         for (T t : this) {
+         *             action.accept(t);
+         *         }
+         *     }
+        */
+        // 该方法的作用是：对容器中的每个元素执行 action 指定的动作。 在方法体中，可以看到是有一个增强for循环的。
+
+        // 需求： 打印 list 中，长度超过3的字符串
+        // 1.7 实现
+        for (String str : list) {
+            if(str.length() > 3){
+                System.out.print(str+" 1.7_forEach ");
+            }
+        }
+        System.out.println();
+        // 1.8 forEach()函数实现
+        list.forEach(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                if (s.length() > 3){
+                    System.out.print(s+" 1.8_forEach ");
+                }
+            }
+        });
+        System.out.println();
+        // 1.8 Lymbda表达式
+        list.forEach(str ->{
+            if (str.length() > 3){
+                System.out.print(str+" 1.8_forEach_Lymbda ");
+            }
+        });
+        System.out.println();
+        // 上述代码给forEach()方法传入一个Lambda表达式，我们不需要知道accept()方法，也不需要知道Consumer接口，类型推导帮我们做了一切。
+
+        // 2,removeIf()
+        //方法体
+        /**
+         *  default boolean removeIf(Predicate<? super E> filter) {
+         *         Objects.requireNonNull(filter);
+         *         boolean removed = false;
+         *         final Iterator<E> each = iterator();
+         *         while (each.hasNext()) {
+         *             if (filter.test(each.next())) {
+         *                 each.remove();
+         *                 removed = true;
+         *             }
+         *         }
+         *         return removed;
+         *     }
+        */
+        // 作用：删除容器中所有满足filter指定条件的元素，其中Predicate是一个函数接口，里面只有一个待实现方法boolean test(T t)
+
+        // 需求：删除列表中，长度大于 3 的字符串
+
+        // 1.7实现
+//        List<String> removeIf17 = Arrays.asList("I", "love", "China");
+//        Iterator<String> it17 = removeIf17.iterator();
+//        while (it17.hasNext()){
+//            if(it17.next().length() > 3){
+//                it17.remove();
+//            }
+//        }
+        // 上述实现报错“Exception in thread "main" java.lang.UnsupportedOperationException”，
+        // 原因是 Arrays.asList 方法生成的实体是 Arrays的内部类ArrayList（和我们常用的 ArrayList是两个不同的类），
+        // 这个内部类继承 AbstractList类，但却没有重写 remove方法。因此报错，定位在 AbstractList中的remove方法
+        List<String> removeIf17 = new ArrayList<>(Arrays.asList("I", "love", "China"));
+        Iterator<String> it17 = removeIf17.iterator();
+        while (it17.hasNext()){
+            if(it17.next().length() > 3){
+                it17.remove();
+            }
+        }
+        removeIf17.forEach(str ->{
+            System.out.println(str+" removeIf17 ");
+        });
+
+        // 1.8 实现
+        List<String> removeIf18 = new ArrayList<>(Arrays.asList("I", "love", "China"));
+        removeIf18.removeIf(new Predicate<String>() {
+            @Override
+            public boolean test(String s) {
+                return s.length() > 3;
+            }
+        });
+        removeIf18.forEach(str ->{
+            System.out.println(str+" removeIf18 ");
+        });
+        // 1.8 Lymbda
+        List<String> removeIfLymbda18 = new ArrayList<>(Arrays.asList("I", "love", "China"));
+        removeIfLymbda18.removeIf(s -> s.length()>3);
+        removeIfLymbda18.forEach(str ->{
+            System.out.println(str+" removeIfLymbda18 ");
+        });
+
+        // 3,replaceAll()
+        // 这个方法是1.8以后，在List中新增的方法
+        // 方法体
+        /**
+         * default void replaceAll(UnaryOperator<E> operator) {
+         *         Objects.requireNonNull(operator);
+         *         final ListIterator<E> li = this.listIterator();
+         *         while (li.hasNext()) {
+         *             li.set(operator.apply(li.next()));
+         *         }
+         *     }
+        */
+        // 作用：对列表中的每个元素，执行 operator 指定的操作，并使用操作结果替换原来的元素。
+
+        // 需求：对列表中长度小于 3 元素后面，拼接指定字符串 "_johann"
+
+        // 1.7 不再累述
+
+        // 1.8 replaceAll
+        List<String> replaceAll18 = new ArrayList<>(Arrays.asList("I", "love", "China"));
+        replaceAll18.replaceAll(new UnaryOperator<String>() {
+            @Override
+            public String apply(String s) {
+                if(s.length() < 3)
+                    return s+"_johann";
+                else
+                    return s;
+            }
+        });
+        replaceAll18.forEach(str ->{
+            System.out.println(str+" replaceAll18 ");
+        });
+
+        // 1.8 replaceAll Lymbda
+        List<String> replaceAllLymbda18 = new ArrayList<>(Arrays.asList("I", "love", "China"));
+        replaceAllLymbda18.replaceAll(s -> {
+            if(s.length() < 3)
+                return s + "_johann";
+            else
+                return s;
+        });
+        replaceAllLymbda18.forEach(str ->{
+            System.out.println(str+" replaceAllLymbda18 ");
+        });
+
+
+        // 4, spliterator()
+        // 方法体
+        /**
+         * default Spliterator<E> spliterator() {
+         *         return Spliterators.spliterator(this, 0);
+         *     }
+        */
+        // 作用： 该方法返回容器的可拆分迭代器。
+        // 从名字来看该方法跟iterator()方法有点像，我们知道Iterator是用来迭代容器的，Spliterator也有类似作用，但二者有如下不同：
+        //  a. Spliterator既可以像Iterator那样逐个迭代，也可以批量迭代。批量迭代可以降低迭代的开销。
+        //  b. Spliterator是可拆分的，一个Spliterator可以通过调用Spliterator<T> trySplit()方法来尝试分成两个。一个是this，另一个是新返回的那个，这两个迭代器代表的元素没有重叠。
+        //可通过（多次）调用Spliterator.trySplit()方法来分解负载，以便多线程处理。
+
+        List<String> spliteratorList = new ArrayList<>(Arrays.asList("I", "love", "China","HeBei","HanDan","YongNian","You","2020","10","01","PRC"));
+
+        Spliterator spliterator = spliteratorList.spliterator();
+        System.out.println("==========================================");
+        // 此值用于表示为分隔符元素定义了遇到顺序
+        System.out.println( spliterator.hasCharacteristics(Spliterator.ORDERED));
+        // 此值表示元素遇到的每对元素是否相等。如果我们从集合创建分离器，它将始终是DISTINCT。
+        System.out.println( spliterator.hasCharacteristics(Spliterator.DISTINCT));
+        // 表示该元素总是有序
+        System.out.println( spliterator.hasCharacteristics(Spliterator.SORTED));
+        // 表示estimateSize()方法返回的值表示有限大小
+        System.out.println( spliterator.hasCharacteristics(Spliterator.SIZED));
+        // 此值表示遇到的元素不会为空。
+        System.out.println( spliterator.hasCharacteristics(Spliterator.NONNULL));
+        // 此值表示是否无法修改元素的来源，即我们不能添加，替换或删除任何元素。
+        System.out.println( spliterator.hasCharacteristics(Spliterator.IMMUTABLE));
+        // 表示可以同时修改源，即，我们可以使用多个线程并发地添加，删除或删除元素，而无需同步。
+        System.out.println( spliterator.hasCharacteristics(Spliterator.CONCURRENT));
+        // 表示由返回的所有分隔符trySplit()将为 SIZED和SUBSIZED。
+        System.out.println( spliterator.hasCharacteristics(Spliterator.SUBSIZED));
+
+        System.out.println(spliterator.estimateSize());
+        System.out.println(spliterator.getExactSizeIfKnown());
+
+
+        /* </p> */
 
     }
 
