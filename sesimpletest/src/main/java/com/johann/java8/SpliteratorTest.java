@@ -16,13 +16,16 @@ public class SpliteratorTest {
     /**
      *  Collection 在 1.8 加入了一个新的方法 {@link Collection#spliterator()} ，这个方法调用后，会生成一个可拆分的迭代器{@link java.util.Spliterator}
      *
+     *  Spliterator为原始类型中的int、long、double提供了专门的子类并默认实现了tryAdvance(java.util.function.Consumer) 和forEachRemaining(java.util.function.Consumer)。
+     *
+     *
      *  1，Spliterator 接口特征集
      *
      *  a. {@link java.util.Spliterator#ORDERED}
-     *      这个特征标识，集合中的元素是有序的，可以理解为每个元素有指定的index.
+     *      这个特征标识，集合中的元素是有序的，可以理解为每个元素有指定的index. 【注意和 SORTED 的区别】
      *
      *  b.{@link java.util.Spliterator#SORTED}
-     *      这个特征标识，迭代器中的元素是按照某种指定的排序方式排过序，即有指定的比较器.
+     *      这个特征标识，迭代器中的元素是按照某种指定的排序方式排过序，即有指定的比较器. 【注意和 ORDERED 的区别】
      *
      *  c.{@link java.util.Spliterator#DISTINCT}
      *      这个特征标识，迭代器中的元素是不重复的.
