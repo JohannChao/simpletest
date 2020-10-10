@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * @ClassName: StreamApi
  * @Description: 初识 Stream
  * @Author: Johann
- * @Date: 2020-10-09 18:42
+ * @Date: 2020-10-09
  **/
 public class StreamApi {
 
