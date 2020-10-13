@@ -1,11 +1,12 @@
 package main.java.com.johann.java8;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Supplier;
+import java.util.Set;
+import java.util.function.*;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -134,11 +135,17 @@ public class StreamReduction {
 
     public static void collectTest(){
         //  collect方法注释中提供的方法，注意关注 Collectors 这个类
-
-
+        String [] strings = {"I","love","China","Hebei","Handan"};
+        List<String> stringList =  Stream.of(strings).collect(Collectors.toList());
+        Set<String> stringSet = Stream.of(strings).collect(Collectors.toSet());
+        System.out.println(stringList);
+        System.out.println(stringSet);
+        Map<String,Integer> map = Stream.of(strings).collect(Collectors.toMap(Function.identity(),String::length));
+        System.out.println(map);
     }
 
     public static void main(String[] args) {
-        testReduce();
+        //testReduce();
+        collectTest();
     }
 }
