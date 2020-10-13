@@ -109,6 +109,8 @@ class ComparableAndConparatorJohann implements Comparable<ComparableAndConparato
         super();
     }
 
+    //
+
     public ComparableAndConparatorJohann(String name, Integer age, Double score) {
         this.name = name;
         this.age = age;
