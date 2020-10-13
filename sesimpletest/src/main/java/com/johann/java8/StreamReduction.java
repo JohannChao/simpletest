@@ -133,6 +133,31 @@ public class StreamReduction {
      *                      = personStream.collect(Collectors.groupingBy(Person::getState,Collectors.groupingBy(Person::getCity)));
      */
 
+    /**
+     *  Function是一个接口，那么Function.identity()是什么意思呢？这要从两方面解释：
+     *      a. Java 8允许在接口中加入具体方法。接口中的具体方法有两种，default方法和static方法，identity()就是Function接口的一个静态方法。
+     *      b. Function.identity()返回一个输出跟输入一样的Lambda表达式对象，等价于形如t -> t形式的Lambda表达式。
+     *
+     *  上面的解释是不是让你疑问更多？不要问我为什么接口中可以有具体方法，也不要告诉我你觉得t -> t比identity()方法更直观。
+     *  接口中的default方法是一个无奈之举，在Java 7及之前要想在定义好的接口中加入新的抽象方法是很困难甚至不可能的，因为所有实现了该接口的类都要重新实现。
+     *  试想在Collection接口中加入一个stream()抽象方法会怎样？
+     *  default方法就是用来解决这个尴尬问题的，直接在接口中实现新加入的方法。
+     *  既然已经引入了default方法，为何不再加入static方法来避免专门的工具类呢！
+     */
+
+    /**
+     *  方法引用
+     *  诸如String::length的语法形式叫做方法引用（method references），这种语法用来替代某些特定形式Lambda表达式。
+     *  如果Lambda表达式的全部内容就是调用一个已有的方法，那么可以用方法引用来替代Lambda表达式。
+     *  方法引用可以细分为四类：
+     *      a. 引用静态方法 Integer::sum
+     *      b. 引用某个对象的方法 list::add
+     *      c. 引用某个类的方法 String::length
+     *      d. 引用构造方法 HashMap::new
+     *
+     *
+     */
+
     public static void collectTest(){
         //  collect方法注释中提供的方法，注意关注 Collectors 这个类
         String [] strings = {"I","love","China","Hebei","Handan"};
@@ -140,12 +165,84 @@ public class StreamReduction {
         Set<String> stringSet = Stream.of(strings).collect(Collectors.toSet());
         System.out.println(stringList);
         System.out.println(stringSet);
+        //String [] strings = {"I","love","China","Hebei","Handan","love"};
+        // java.lang.IllegalStateException: Duplicate key 4
         Map<String,Integer> map = Stream.of(strings).collect(Collectors.toMap(Function.identity(),String::length));
-        System.out.println(map);
+        System.out.println(map.keySet());
     }
 
     public static void main(String[] args) {
         //testReduce();
-        collectTest();
+        //collectTest();
+        System.out.println(CourseCredit.BIOS.getCredit());
+        
     }
 }
+
+class Student{
+    private String name;
+    private Integer sex;
+    private String className;
+    private Double grade;
+    // (绩点*学分+...)/(学分+...)
+
+
+}
+
+class Grades{
+     Integer getGrades(Double grade){
+        if(grade >= 90){
+            return 6;
+        }
+        if(grade >= 80){
+            return 5;
+        }
+        if(grade >= 70){
+            return 4;
+        }
+        if(grade >= 60){
+            return 3;
+        }
+        if(grade >= 40){
+            return 2;
+        }
+        if(grade >= 20){
+            return 1;
+        }
+        return 0;
+    }
+}
+
+enum CourseCredit {
+    MATH("数学",4),
+    ENGLISH("英语",4),
+    CHINESE("语文",4),
+    PHYSICS("物理",3),
+    CHEMISTRY("化学",3),
+    BIOS("生物",3);
+
+    private String courseName;
+    private Integer credit;
+
+    private CourseCredit(String courseName,Integer credit){
+        this.courseName = courseName;
+        this.credit = credit;
+    }
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public Integer getCredit() {
+        return credit;
+    }
+
+    public void setCredit(Integer credit) {
+        this.credit = credit;
+    }
+}
+
+
