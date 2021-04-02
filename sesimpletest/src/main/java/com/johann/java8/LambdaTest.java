@@ -149,11 +149,15 @@ public class LambdaTest {
         });
         System.out.println();
         // 1.8 Lymbda表达式
+        StringBuffer sss = new StringBuffer();
         list.forEach(str ->{
             if (str.length() > 3){
                 System.out.print(str+" 1.8_forEach_Lymbda ");
+                sss.append(str);
             }
         });
+        System.out.println();
+        System.out.println("sss ::::: "+sss);
         System.out.println();
         // 上述代码给forEach()方法传入一个Lambda表达式，我们不需要知道accept()方法，也不需要知道Consumer接口，类型推导帮我们做了一切。
 

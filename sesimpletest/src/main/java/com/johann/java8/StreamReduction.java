@@ -1,9 +1,8 @@
 package main.java.com.johann.java8;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -134,6 +133,7 @@ public class StreamReduction {
      */
 
     /**
+     *  Map<String,Integer> map = Stream.of(strings).collect(Collectors.toMap(Function.identity(),String::length));
      *  Function是一个接口，那么Function.identity()是什么意思呢？这要从两方面解释：
      *      a. Java 8允许在接口中加入具体方法。接口中的具体方法有两种，default方法和static方法，identity()就是Function接口的一个静态方法。
      *      b. Function.identity()返回一个输出跟输入一样的Lambda表达式对象，等价于形如t -> t形式的Lambda表达式。
@@ -154,42 +154,255 @@ public class StreamReduction {
      *      b. 引用某个对象的方法 list::add
      *      c. 引用某个类的方法 String::length
      *      d. 引用构造方法 HashMap::new
-     *
-     *
      */
+
+    /**
+     *  收集器
+     *  将一个Stream转换成一个容器，至少需要两样东西:
+     *      1，目标容器是什么？ArrayList还是HashSet，或者是个TreeMap。
+     *      2，新元素如何添加到容器中？是List.add()还是Map.put()。
+     *      3，如果并行的进行规约，还需要告诉collect() 多个部分结果如何合并成一个。
+     *  因此，java中将collect()方法定义 {@link java.util.stream.Stream#collect(Supplier, BiConsumer, BiConsumer)}
+     *  但，如果是这样，我们每次调用collect() 方法都传入这三个参数太麻烦了。此时，收集器（Collecttor）就是对这三个参数的简单封装
+     *  也因此，collect()方法还提供另外的重载，即{@link java.util.stream.Stream#collect(Collector)}。
+     *
+     *  Collectors工具类（可以类比为Collection{@link java.util.Collection}接口的工具类Collecttions{@link java.util.Collections}）
+     *  该工具类提供一些静态方法，用于生成各种常用的Collector，如栗子中的 Collectors.toList()方法
+     *  也可以用 Collectors.toCollection() {@link java.util.stream.Collectors#toCollection(Supplier)} 人为指定容器类型 (HashSet,ArrayList)
+     *
+     *  使用collect()生成Map
+     *  前面已经说过Stream背后依赖于某种数据源，数据源可以是数组、容器等，但不能是Map。反过来从Stream生成Map是可以的，但我们要想清楚Map的key和value分别代表什么，根本原因是我们要想清楚要干什么。
+     *  通常在三种情况下collect()的结果会是Map：
+     *      a.使用Collectors.toMap()生成的收集器，用户需要指定如何生成Map的key和value。
+     *      b.使用Collectors.partitioningBy()生成的收集器，对元素进行二分区操作时用到。
+     *      c.使用Collectors.groupingBy()生成的收集器，对元素做group操作时用到。
+     *
+    */
 
     public static void collectTest(){
         //  collect方法注释中提供的方法，注意关注 Collectors 这个类
         String [] strings = {"I","love","China","Hebei","Handan"};
-        List<String> stringList =  Stream.of(strings).collect(Collectors.toList());
-        Set<String> stringSet = Stream.of(strings).collect(Collectors.toSet());
+        // 如果不使用收集器Collector如何实现？
+        List<String> stringList =  Stream.of(strings).collect(ArrayList::new,ArrayList::add,ArrayList::addAll);
+        //List<String> stringList =  Stream.of(strings).collect(Collectors.toList());
+
+        // 如果不使用收集器Collector如何实现？
+        Set<String> stringSet = Stream.of(strings).collect(HashSet::new,HashSet::add,HashSet::addAll);
+        //Set<String> stringSet = Stream.of(strings).collect(Collectors.toSet());
         System.out.println(stringList);
         System.out.println(stringSet);
+
+        // 人为指定容器的实际类型 ArrayList,HashSet
+        List<String> stringList1 =  Stream.of(strings).collect(Collectors.toCollection(ArrayList::new));
+        System.out.println(stringList1);
+        Set<String> stringSet1 =  Stream.of(strings).collect(Collectors.toCollection(HashSet::new));
+        System.out.println(stringSet1);
+
         //String [] strings = {"I","love","China","Hebei","Handan","love"};
         // java.lang.IllegalStateException: Duplicate key 4
+
+        // 如果不使用收集器Collector如何实现？
+        //Stream.of(strings).collect(HashMap::new,)
         Map<String,Integer> map = Stream.of(strings).collect(Collectors.toMap(Function.identity(),String::length));
         System.out.println(map.keySet());
+
+        // a. 用Collectors.toMap()生成的收集器，用户需要指定如何生成Map的key和value
+        List<CourseGrade> liliGrade = new ArrayList<>();
+        liliGrade.add(new CourseGrade("MATH",80.0));
+        liliGrade.add(new CourseGrade("ENGLISH",50.5));
+        liliGrade.add(new CourseGrade("CHINESE",90.3));
+        liliGrade.add(new CourseGrade("PHYSICS",88.2));
+        liliGrade.add(new CourseGrade("CHEMISTRY",70.2));
+        liliGrade.add(new CourseGrade("BIOLOGY",60.3));
+        Student lili = new Student("lili",0,"高二（4）班",liliGrade);
+
+        List<CourseGrade> meiGrade = new ArrayList<>();
+        meiGrade.add(new CourseGrade("MATH",55.4));
+        meiGrade.add(new CourseGrade("ENGLISH",90.5));
+        meiGrade.add(new CourseGrade("CHINESE",45.6));
+        meiGrade.add(new CourseGrade("PHYSICS",77.3));
+        meiGrade.add(new CourseGrade("CHEMISTRY",66.4));
+        meiGrade.add(new CourseGrade("BIOLOGY",65.8));
+        Student mei = new Student("mei",0,"高二（4）班",meiGrade);
+
+        List<CourseGrade> leiGrade = new ArrayList<>();
+        leiGrade.add(new CourseGrade("MATH",94.3));
+        leiGrade.add(new CourseGrade("ENGLISH",98.4));
+        leiGrade.add(new CourseGrade("CHINESE",55.7));
+        leiGrade.add(new CourseGrade("PHYSICS",61.8));
+        leiGrade.add(new CourseGrade("CHEMISTRY",76.9));
+        leiGrade.add(new CourseGrade("BIOLOGY",94.2));
+        Student lei = new Student("lei",0,"高二（4）班",leiGrade);
+
+        List<CourseGrade> mingGrade = new ArrayList<>();
+        mingGrade.add(new CourseGrade("MATH",89.4));
+        mingGrade.add(new CourseGrade("ENGLISH",78.2));
+        mingGrade.add(new CourseGrade("CHINESE",59.2));
+        mingGrade.add(new CourseGrade("PHYSICS",96.0));
+        mingGrade.add(new CourseGrade("CHEMISTRY",97.5));
+        mingGrade.add(new CourseGrade("BIOLOGY",92.5));
+        Student ming = new Student("ming",0,"高二（4）班",mingGrade);
+
+        List<Student> students = new ArrayList<>();
+        students.add(lili);
+        students.add(mei);
+        students.add(lei);
+        students.add(ming);
+        System.out.println(lili.computeGPA());
+        //Map<Student, Double> studentToGPA = students.stream().collect(Collectors.toMap(Function.identity(),Student::computeGPA));
+        //System.out.println(studentToGPA);
+
     }
 
     public static void main(String[] args) {
         //testReduce();
-        //collectTest();
-        System.out.println(CourseCredit.BIOS.getCredit());
+        collectTest();
+        System.out.println(CourseCredit.BIOLOGY.getCredit());
         
     }
 }
+@FunctionalInterface
+interface stu{
+    Double computeGPA();
+}
 
-class Student{
+class Student {
     private String name;
     private Integer sex;
     private String className;
-    private Double grade;
-    // (绩点*学分+...)/(学分+...)
+    private List<CourseGrade> courseGrades;
 
+    public Student(){
+        super();
+    }
+
+    public Student(String name,Integer sex,String className,List<CourseGrade> courseGrades){
+        this.name = name;
+        this.sex = sex;
+        this.className = className;
+        this.courseGrades = courseGrades;
+    }
+
+    /**
+    * @Description: 计算平均绩点 (绩点*学分+...)/(学分+...)
+    * @Param: [] 
+    * @return: java.lang.Double 
+    * @Author: Johann 
+    * @Date: 2020/10/15 
+    */ 
+    public Double computeGPA(){
+        List<CourseGrade> courseGrades = this.getCourseGrades();
+        BigDecimal gradeMulCreditSum = new BigDecimal(0);
+        BigDecimal creditSum = new BigDecimal(0);
+        courseGrades.forEach(courseGrade -> {
+            System.out.println(courseGrade.getCourseName()+" : "+courseGrade.getGrade());
+            System.out.println(courseGrade.getCourseName()+" : "+CourseCredit.getCredit(courseGrade.getCourseName()));
+            System.out.println(gradeMulCreditSum);
+            System.out.println(creditSum);
+            gradeMulCreditSum.add(new BigDecimal(courseGrade.getGrade())
+                    .multiply(new BigDecimal(CourseCredit.getCredit(courseGrade.getCourseName()))));
+            creditSum.add(new BigDecimal(CourseCredit.getCredit(courseGrade.getCourseName())));
+        });
+        System.out.println(gradeMulCreditSum);
+        System.out.println(creditSum);
+        return gradeMulCreditSum.divide(creditSum,2, RoundingMode.HALF_UP).doubleValue();
+    }
+    /** 
+    * @Description: 获取平均分 
+    * @Param: [] 
+    * @return: java.lang.Double 
+    * @Author: Johann 
+    * @Date: 2020/10/15 
+    */ 
+    public Double computeAverageScore(){
+        List<CourseGrade> courseGrades = this.getCourseGrades();
+        BigDecimal gradeSum = new BigDecimal(0);
+        BigDecimal courseSum = new BigDecimal(0);
+        courseGrades.forEach(courseGrade -> {
+            gradeSum.add(new BigDecimal(courseGrade.getGrade()));
+            courseSum.add(new BigDecimal(1));
+        });
+        return gradeSum.divide(courseSum,2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public List<CourseGrade> getCourseGrades() {
+        return courseGrades;
+    }
+
+    public void setCourseGrades(List<CourseGrade> courseGrades) {
+        this.courseGrades = courseGrades;
+    }
 
 }
+/** 
+* @Description: 各个科目成绩 
+* @Param:  
+* @return:  
+* @Author: Johann 
+* @Date: 2020/10/15 
+*/ 
+class CourseGrade{
+    private String courseName;
+    private Double grade;
 
-class Grades{
+    public CourseGrade(){
+        super();
+    }
+
+    public  CourseGrade(String courseName,Double grade){
+        this.courseName = courseName;
+        this.grade = grade;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public Double getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Double grade) {
+        this.grade = grade;
+    }
+}
+
+/** 
+* @Description: 学分绩点
+* @Param:  
+* @return:  
+* @Author: Johann 
+* @Date: 2020/10/15 
+*/ 
+class GradePoint{
      Integer getGrades(Double grade){
         if(grade >= 90){
             return 6;
@@ -212,14 +425,20 @@ class Grades{
         return 0;
     }
 }
-
+/** 
+* @Description: 科目学分
+* @Param:  
+* @return:  
+* @Author: Johann 
+* @Date: 2020/10/15 
+*/ 
 enum CourseCredit {
-    MATH("数学",4),
-    ENGLISH("英语",4),
-    CHINESE("语文",4),
-    PHYSICS("物理",3),
-    CHEMISTRY("化学",3),
-    BIOS("生物",3);
+    MATH("MATH",4),
+    ENGLISH("ENGLISH",4),
+    CHINESE("CHINESE",4),
+    PHYSICS("PHYSICS",3),
+    CHEMISTRY("CHEMISTRY",3),
+    BIOLOGY("BIOLOGY",3);
 
     private String courseName;
     private Integer credit;
@@ -228,6 +447,22 @@ enum CourseCredit {
         this.courseName = courseName;
         this.credit = credit;
     }
+    /** 
+    * @Description: 根据学科获取各科目学分
+    * @Param: [courseName] 
+    * @return: java.lang.Integer 
+    * @Author: Johann 
+    * @Date: 2020/10/15 
+    */ 
+    public static Integer getCredit(String courseName) {
+        for (CourseCredit c : CourseCredit.values()) {
+            if (c.getCourseName() == courseName) {
+                return c.getCredit();
+            }
+        }
+        return 0;
+    }
+
     public String getCourseName() {
         return courseName;
     }

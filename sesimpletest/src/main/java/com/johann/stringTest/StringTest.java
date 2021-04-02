@@ -1,5 +1,7 @@
 package main.java.com.johann.stringTest;
 
+import java.util.StringJoiner;
+
 /**
  * @ClassName StringTest
  * @Description TODO
@@ -128,5 +130,12 @@ public class StringTest {
 //        System.out.println(str4intern.equals(str4));
 //        System.out.println(str4intern == str4);// 1.8 false  1.7 false  1.6 false
 
+        StringJoiner sj = new StringJoiner("*","#","。");
+        String sjStr = sj.toString();
+        System.out.println("sjStr : "+sjStr);
+        sj.add("我");
+        sj.add("和");
+        sj.add("你");
+        System.out.println(sj.toString());
     }
 }
