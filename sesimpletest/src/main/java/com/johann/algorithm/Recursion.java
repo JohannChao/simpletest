@@ -1,5 +1,8 @@
 package main.java.com.johann.algorithm;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * @ClassName: Recursion
  * @Description: 递归
@@ -60,5 +63,9 @@ public class Recursion {
         //System.out.println(factorial2(4));
         towerOfHanoi(4,"A","B","C");
 
+        Calendar calendar = null;
+        //calendar.setTime(new Date());
+        Date dat = new Date();
+        System.out.println(dat.toString());
     }
 }
