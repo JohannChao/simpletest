@@ -1,4 +1,4 @@
-package main.java.com.johann.threadTest;
+package com.johann.threadTest;
 
 public class TreadTest {
 }

@@ -1,4 +1,4 @@
-package main.java.com.johann.constantinfo;
+package com.johann.constantinfo;
 
 public class StringTest{
 	

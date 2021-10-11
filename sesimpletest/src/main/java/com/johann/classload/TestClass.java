@@ -1,4 +1,4 @@
-package main.java.com.johann.classload;
+package com.johann.classload;
 
 /**
  * @ClassName TestClass

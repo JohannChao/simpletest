@@ -1,4 +1,4 @@
-package main.java.com.johann.threadTest;
+package com.johann.threadTest;
 
 import java.util.Calendar;
 import java.util.concurrent.Callable;

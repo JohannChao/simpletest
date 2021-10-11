@@ -1,4 +1,4 @@
-package main.java.com.johann.javaRegex;
+package com.johann.javaRegex;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

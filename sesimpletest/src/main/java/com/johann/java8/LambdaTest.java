@@ -1,4 +1,4 @@
-package main.java.com.johann.java8;
+package com.johann.java8;
 
 import java.awt.event.ActionListener;
 import java.util.*;

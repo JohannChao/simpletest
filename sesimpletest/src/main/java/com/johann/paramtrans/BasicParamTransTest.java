@@ -1,4 +1,4 @@
-package main.java.com.johann.paramtrans;
+package com.johann.paramtrans;
 
 /**
  * @ClassName BasicParamTransTest

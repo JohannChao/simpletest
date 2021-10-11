@@ -1,4 +1,4 @@
-package main.java.com.johann.stringTest;
+package com.johann.stringTest;
 
 /**
  * @ClassName StringInternTest

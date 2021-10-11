@@ -1,4 +1,4 @@
-package main.java.com.johann.threadTest;
+package com.johann.threadTest;
 
 /**
 *  Wait和NotifyAll实现，生产者消费者

@@ -1,4 +1,4 @@
-package main.java.com.johann.javacollection;
+package com.johann.javacollection;
 import com.sun.xml.internal.ws.util.StringUtils;
 
 import	java.io.ObjectStreamClass;

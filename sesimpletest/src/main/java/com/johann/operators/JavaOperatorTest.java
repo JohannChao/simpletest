@@ -1,4 +1,4 @@
-package main.java.com.johann.operators;
+package com.johann.operators;
 
 /**
  * @ClassName JavaOperatorTest

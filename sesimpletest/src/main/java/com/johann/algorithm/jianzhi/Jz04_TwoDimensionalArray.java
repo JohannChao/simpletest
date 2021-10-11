@@ -1,4 +1,4 @@
-package main.java.com.johann.algorithm.jianzhi;
+package com.johann.algorithm.jianzhi;
 
 /**
  * @ClassName: Jz04_TwoDimensionalArray

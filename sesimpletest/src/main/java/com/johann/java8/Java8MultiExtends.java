@@ -1,4 +1,4 @@
-package main.java.com.johann.javaProblem;
+package com.johann.java8;
 
 /**
  * @ClassName: Java8MultiExtends

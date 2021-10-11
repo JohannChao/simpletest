@@ -1,4 +1,4 @@
-package main.java.com.johann.stringTest;
+package com.johann.stringTest;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

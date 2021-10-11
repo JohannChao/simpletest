@@ -1,4 +1,4 @@
-package main.java.com.johann.algorithm;
+package com.johann.algorithm;
 
 import java.util.Calendar;
 import java.util.Date;

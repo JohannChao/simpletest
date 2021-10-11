@@ -1,4 +1,4 @@
-package main.java.com.johann.jvm;
+package com.johann.jvm;
 
 /**
  * @ClassName: JvmTestCopy

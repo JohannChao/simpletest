@@ -1,4 +1,4 @@
-package main.java.com.johann.javacollection;
+package com.johann.javacollection;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
