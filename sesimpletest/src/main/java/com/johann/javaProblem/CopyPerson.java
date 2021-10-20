@@ -16,8 +16,15 @@ import lombok.*;
 //@Slf4j
 //@Log
 //@Log4j
-public class CopyPerson {
+public class CopyPerson implements Cloneable{
     private Integer id;
     private String name;
     private Subjects subject;
+
+    @Override
+    public CopyPerson clone() throws CloneNotSupportedException {
+        CopyPerson cp = (CopyPerson) super.clone();
+        cp.setSubject(this.subject.clone());
+        return cp;
+    }
 }

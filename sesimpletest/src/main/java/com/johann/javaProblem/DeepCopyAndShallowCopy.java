@@ -40,10 +40,12 @@ public class DeepCopyAndShallowCopy {
         sb_orig.setChinese(70);
         sb_orig.setEnglish(60);
 
-        //Subjects sb_tgt = new Subjects();
+        Subjects sb_tgt = new Subjects();
         // apache 下的 BeanUtils.copyProperties(target,source)
-        //BeanUtils.copyProperties(sb_tgt,sb_orig);
-        //System.out.println(sb_tgt);
+        BeanUtils.copyProperties(sb_tgt,sb_orig);
+        sb_orig.setSub("003");
+        System.out.println(sb_orig);
+        System.out.println(sb_tgt);
 
         CopyPerson cp = CopyPerson.builder()
         .id(1).name("Johann")

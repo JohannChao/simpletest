@@ -1,6 +1,6 @@
 package com.johann.javaProblem;
 
-public class Subjects {
+public class Subjects implements Cloneable{
     private String sub;
     private Integer math;
     private Integer english;
@@ -46,5 +46,10 @@ public class Subjects {
                 ", english=" + english +
                 ", chinese=" + chinese +
                 '}';
+    }
+
+    @Override
+    public Subjects clone() throws CloneNotSupportedException {
+        return (Subjects) super.clone();
     }
 }
