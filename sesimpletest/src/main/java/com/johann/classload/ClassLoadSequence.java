@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
  * @ClassName ClassLoadSequence
  * @Description 验证加载顺序,通过 DEBUG step into 验证加载顺序
  * @Author Johann
- * @Date 2019-10-14 16:50
+ * @Date 2019-10-14
  **/
 public class ClassLoadSequence {
 

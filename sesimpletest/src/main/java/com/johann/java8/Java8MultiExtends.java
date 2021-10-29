@@ -4,7 +4,7 @@ package com.johann.java8;
  * @ClassName: Java8MultiExtends
  * @Description: java8多继承的问题
  * @Author: Johann
- * @Date: 2020-05-25 14:54
+ * @Date: 2020-05-25
  **/
 public class Java8MultiExtends extends itclass implements Itface{
 

@@ -12,7 +12,7 @@ import java.util.List;
  * @ClassName: ImmutableObjectTets
  * @Description: Java中的不可变对象
  * @Author: Johann
- * @Date: 2021-09-09 13:56
+ * @Date: 2021-09-09
  **/
 public class ImmutableObjectTets {
 

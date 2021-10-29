@@ -4,7 +4,7 @@ package com.johann.classload;
  * @ClassName OuterClass
  * @Description 类加载过程中的执行顺序
  * @Author Johann
- * @Date 2019-07-20 11:38
+ * @Date 2019-07-20
  **/
 public class OuterClass {
 

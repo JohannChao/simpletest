@@ -4,7 +4,7 @@ package com.johann.classload;
  * @ClassName TestClass
  * @Description TODO
  * @Author Johann
- * @Date 2019-07-20 13:56
+ * @Date 2019-07-20
  **/
 public class TestClass {
 

@@ -4,7 +4,7 @@ package com.johann.algorithm;
  * @ClassName: KaratsubaBigNumber
  * @Description: 大数乘积
  * @Author: Johann
- * @Date: 2021-06-16 10:36
+ * @Date: 2021-06-16
  **/
 public class KaratsubaBigNumber {
 

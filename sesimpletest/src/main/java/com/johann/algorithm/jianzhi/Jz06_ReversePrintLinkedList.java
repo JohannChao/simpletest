@@ -4,7 +4,7 @@ package com.johann.algorithm.jianzhi;
  * @ClassName: Jz06_PrintLinkedList
  * @Description: TODO
  * @Author: Johann
- * @Date: 2021-05-10 17:51
+ * @Date: 2021-05-10
  **/
 public class Jz06_ReversePrintLinkedList {
 

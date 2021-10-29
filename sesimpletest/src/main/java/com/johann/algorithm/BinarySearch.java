@@ -4,7 +4,7 @@ package com.johann.algorithm;
  * @ClassName: BinarySearch
  * @Description: TODO
  * @Author: Johann
- * @Date: 2020-05-11 11:17
+ * @Date: 2020-05-11
  **/
 public class BinarySearch {
 

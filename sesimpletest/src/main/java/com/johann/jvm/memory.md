@@ -4,7 +4,7 @@ JVM运行时数据区由：程序计数器[Program Counter Register]，虚拟机
 
 JVM内存结构由：程序计数器，堆，栈，本地方法栈，方法区组成。
 
-见图：[jvm_memory.png]
+![jvm_memory](../resources/jvm_memory.png "jvm_memory")
 
 #### 1 程序计数器
 

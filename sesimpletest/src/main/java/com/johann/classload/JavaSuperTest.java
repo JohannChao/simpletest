@@ -7,7 +7,7 @@ package com.johann.classload;
  *  但其实已经默认引用了 父类的空构造器。虽然不会报错，但有些属性可能不会被初始化赋值。
  *
  * @Author: Johann
- * @Date: 2020-09-18 15:10
+ * @Date: 2020-09-18
  **/
 public class JavaSuperTest {
 

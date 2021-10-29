@@ -4,7 +4,7 @@ package com.johann.algorithm;
  * @ClassName: Sorting
  * @Description: TODO 排序算法
  * @Author: Johann
- * @Date: 2020-05-06 17:14
+ * @Date: 2020-05-06
  **/
 public class Sorting {
 
