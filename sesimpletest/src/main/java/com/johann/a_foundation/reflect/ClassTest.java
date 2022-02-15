@@ -34,9 +34,9 @@ public class ClassTest {
         // 获取类加载器
         ClassLoader cl = _class.getClassLoader();
         // 判断是否是注解类型
-        System.out.println(_class.isAnnotation());
+        System.out.println("isAnnotation："+_class.isAnnotation());
         // 判断是否是数组类
-        System.out.println(_class.isArray());
+        System.out.println("isArray："+_class.isArray());
         // 为类创建一个新实例
         try{
             Object obj =  _class.newInstance();

@@ -6,7 +6,9 @@ public class BasicsThreadTest {
 
     public static void main(String[] args) {
         //线程共享数据
-        MyThread mythread=new MyThread();
+        //MyThread mythread=new MyThread();
+        MyThreadTwo mythread=new MyThreadTwo();
+
         //下列线程都是通过mythread对象创建的
         Thread a=new Thread(mythread,"A");
         Thread b=new Thread(mythread,"B");
@@ -23,12 +25,12 @@ public class BasicsThreadTest {
         //所以多个线程同时访问时出现问题就是难以避免的了。解决办法是 ： 在run方法前加上synchronized关键字即可得到正确答案。
 
         //线程不共享数据
-        MyThreadCopy copy_a = new MyThreadCopy("Copy_A");
-        MyThreadCopy copy_b = new MyThreadCopy("Copy_B");
-        MyThreadCopy copy_c = new MyThreadCopy("Copy_C");
-        copy_a.start();
-        copy_b.start();
-        copy_c.start();
+//        MyThreadCopy copy_a = new MyThreadCopy("Copy_A");
+//        MyThreadCopy copy_b = new MyThreadCopy("Copy_B");
+//        MyThreadCopy copy_c = new MyThreadCopy("Copy_C");
+//        copy_a.start();
+//        copy_b.start();
+//        copy_c.start();
     }
 }
 class MyThread extends Thread {
@@ -40,6 +42,30 @@ class MyThread extends Thread {
         super.run();
         count--;
         System.out.println("由 " + MyThread.currentThread().getName() + " 计算，count=" + count);
+    }
+}
+
+class MyThreadTwo extends Thread {
+
+    private int num = 1;
+
+    public MyThreadTwo(){
+        super();
+    }
+
+
+    @Override
+    public void run() { //加上 synchronized 关键字，即可得到正确的答案
+        super.run();
+        int a = 1;
+        while (true) {
+            if(a>100){
+                break;
+            }
+            a ++;
+            num++;
+            System.out.println("由 " + MyThread.currentThread().getName() + " 计算，num=" + num);
+        }
     }
 }
 
